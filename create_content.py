@@ -1,4 +1,57 @@
+import random
 
+users = ["lemon", "pipe"]
+
+argumentative = [
+    """Is it cheating when students use artificial intelligence to help them with their schoolwork? In your opinion, how, if at all, should students be allowed to use AI in school? What do you see as benefits and drawbacks of using AI for doing homework?""",
+    """Should 16-Year-Olds Be Allowed to Vote? In your opinion, is the current minimum legal voting age of 18 fair and appropriate?  What influence would lowering the threshold to 16 years have on the society?""",
+    """Boys Are Spending More Time Gaming. Is That a Problem? Some say video games are a chief reason boys and young men are struggling. Others say games serve an important role in teens’ lives. What do you think? What can gaming bring to a teen’s life? What other activities, if any, does it take away from?""",
+    """Should Schools Ban Student Phones? More and more countries are cracking down on students’ use of cellphones. Are these restrictions fair? Can they work? Do you think that phones interfere with student’s academic learning, the quality of their social interactions or overall engagement in school?""",
+    """Is It Ethical for Teachers to Use AI to Grade Papers? Many schools do not allow students to use artificial intelligence to complete their assignments. Should teachers be held to the same standard? Do you think teachers should be able to use the technology at all? If so, in which instances would it be acceptable, and what guidelines should teachers follow when using it?""",
+    """Should Social Media Companies Be Responsible for Fact-Checking Their Sites? A few months ago, Meta, the company that owns Facebook and Instagram, has ended its longstanding fact-checking program. Is that a good idea? What could this mean for users? Do you believe social media companies should be responsible for fact-checking lies, misinformation, disinformation and conspiracy theories on their sites? Why or why not? To what extent does it matter if what we see on social media is true?""",
+    """Should Single-Use Vapes Be Banned Everywhere? In an effort to protect young people’s health, England plans to ban disposable vapes next year. Do you think this measure will curb vaping among teens? To what extent do you think the government should have a role in trying to reduce smoking and vaping? Do you think your government should be doing more to discourage people from picking up the habits? Why or why not? What consequences could the ban have for the environment?""",
+    """How Important Is a Free Press to Our Democracy? What role do journalists play in our society - whether they work for big national newspapers, niche podcasts or YouTube channels? What would happen if they couldn’t freely investigate and report the news? For example, what if journalists were barred from informing the public about the actions of powerful people like government officials, corporate executives, and celebrities? How would it affect our democracy?""",
+    """Does Everyone Have a Responsibility to Vote? Is it OK not to vote, or is voting a civic duty? What to you are the most compelling reasons for showing up at the polls? What about those for sitting out? Why do you think so many people don’t vote? What do you think would encourage them to participate more?""",
+    """Workers across industries are concerned about AI coming for their work. Are you worried about AI taking human jobs? Why or why not? Which types of work do you think are most vulnerable to automation? Do you think the fears about AI are overblown?""",
+    """Should All Children Under 16 Be Barred From Social Media? Australia recently passed a law that does just that. Should other countries do the same? What is your reaction to Australia’s new law? Do you think it is a good idea? Will it be effective? What do you think are the negative effects of social media on young people? If you don’t think a similar law would work, what should be done to address these problems?""",
+    """Should Grades Be Based on Excellence or Effort? Some people think that too many students today wrongly expect to be rewarded for their efforts rather than the quality of their work. Do you agree? Do you think marks are accurate reflections of students’ learning? What do you think student grades should be based on? How much, if at all, should effort and hard work factor in?"""
+]
+
+creative = [
+    """What if people had microchips in their eyes that allowed them to record everything they see?""",
+    """What if no one ever had to work again because robots took care of everything?""",
+    """What if our memories could be stolen and sold on the black market?""",
+    """What if we could restore the diminishing populations of endangered species by cloning them?""",
+    """What if you could test the outcomes of different decisions in virtual reality with 100% accuracy?""",
+    """What if the usage of cars for personal needs were banned?""",
+    """What if there were a world where people spend all their personal time escaping to idyllic VR settings instead of confronting the challenges of real life?""",
+    """What if vibe-coding became so popular that every IT company would switch to it?""",
+    """What if the theory that COVID-19 vaccines contain microchips were true?""",
+    """What if it were forbidden to sell or buy products containing meat?"""
+]
+
+user_html = ""
+for user in users:
+    argumentative_for_user = random.sample(argumentative, 2)
+    creative_for_user = random.sample(creative, 2)
+
+    user_html += f"""
+\"{user}\": {{
+    \"argumentative\":
+    [
+    `{argumentative_for_user[0]}`,
+    `{argumentative_for_user[1]}`
+    ],
+
+    \"creative\":
+    [
+    `{creative_for_user[0]}`,
+    `{creative_for_user[1]}`
+    ],
+    }},
+"""
+
+index_html = r"""
 <html>
 
 <head>
@@ -1099,35 +1152,9 @@
 
 <script>
     const topics = {
+"""
 
-"lemon": {
-    "argumentative":
-    [
-    `Workers across industries are concerned about AI coming for their work. Are you worried about AI taking human jobs? Why or why not? Which types of work do you think are most vulnerable to automation? Do you think the fears about AI are overblown?`,
-    `Should 16-Year-Olds Be Allowed to Vote? In your opinion, is the current minimum legal voting age of 18 fair and appropriate?  What influence would lowering the threshold to 16 years have on the society?`
-    ],
-
-    "creative":
-    [
-    `What if no one ever had to work again because robots took care of everything?`,
-    `What if you could test the outcomes of different decisions in virtual reality with 100% accuracy?`
-    ],
-    },
-
-"pipe": {
-    "argumentative":
-    [
-    `Should 16-Year-Olds Be Allowed to Vote? In your opinion, is the current minimum legal voting age of 18 fair and appropriate?  What influence would lowering the threshold to 16 years have on the society?`,
-    `Is It Ethical for Teachers to Use AI to Grade Papers? Many schools do not allow students to use artificial intelligence to complete their assignments. Should teachers be held to the same standard? Do you think teachers should be able to use the technology at all? If so, in which instances would it be acceptable, and what guidelines should teachers follow when using it?`
-    ],
-
-    "creative":
-    [
-    `What if our memories could be stolen and sold on the black market?`,
-    `What if the usage of cars for personal needs were banned?`
-    ],
-    },
-
+index_html += user_html + """
     }
     const urlParams = new URLSearchParams(window.location.search);
     const userId = urlParams.get("id");
@@ -1143,3 +1170,7 @@
         creative.innerHTML = '<li class="c2 c11 li-bullet-0"><span class="c1">Invalid user ID. Please check your URL. </span></li>'
     }
 </script>
+"""
+
+with open("index.html", "w") as f:
+    f.write(index_html)
