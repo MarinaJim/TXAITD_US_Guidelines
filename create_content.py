@@ -730,8 +730,11 @@ index_html = r"""
 
         .c7 {
             background-color: #ffffff;
-            max-width: 451.4pt;
-            padding: 72pt 72pt 72pt 72pt
+            max-width: 550pt;
+            padding: 72pt 72pt 72pt 72pt;
+            width:140%;
+            margin-left: auto;
+            margin-right: auto;
         }
 
         .c3 {
@@ -1017,18 +1020,18 @@ index_html = r"""
                 them to log into the system. </span></li>
     </ul>
     <p class="c2"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span
-            style="overflow: hidden; display: inline-block; margin: 0.00px 0.00px; border: 0.00px solid #000000; transform: rotate(0.00rad) translateZ(0px); -webkit-transform: rotate(0.00rad) translateZ(0px); width: 538.69px; height: 289.18px;"><img
+            style="overflow: hidden; display: inline-block; margin: 0.00px 0.00px; border: 0.00px solid #000000; transform: rotate(0.00rad) translateZ(0px); -webkit-transform: rotate(0.00rad) translateZ(0px); width: 1000px; height: auto;"><img
                 alt="" src="images/image1.png"
-                style="width: 538.69px; height: 289.18px; margin-left: 0.00px; margin-top: 0.00px; transform: rotate(0.00rad) translateZ(0px); -webkit-transform: rotate(0.00rad) translateZ(0px);"
+                style="width: 800px; height: auto; margin-left: 0.00px; margin-top: 0.00px; transform: rotate(0.00rad) translateZ(0px); -webkit-transform: rotate(0.00rad) translateZ(0px);"
                 title=""></span></p>
     <ul class="c17 lst-kix_geynw9iyvxg3-0">
         <li class="c2 c11 li-bullet-0"><span class="c1">After the login, you will be redirected to Documents section.
                 You will work only with this part of the Software.</span></li>
     </ul>
     <p class="c2 c21"><span
-            style="overflow: hidden; display: inline-block; margin: 0.00px 0.00px; border: 0.00px solid #000000; transform: rotate(0.00rad) translateZ(0px); -webkit-transform: rotate(0.00rad) translateZ(0px); width: 601.70px; height: 152.00px;"><img
+            style="overflow: hidden; display: inline-block; margin: 0.00px 0.00px; border: 0.00px solid #000000; transform: rotate(0.00rad) translateZ(0px); -webkit-transform: rotate(0.00rad) translateZ(0px); width: 1200px; height: auto;"><img
                 alt="" src="images/image6.png"
-                style="width: 601.70px; height: 152.00px; margin-left: 0.00px; margin-top: 0.00px; transform: rotate(0.00rad) translateZ(0px); -webkit-transform: rotate(0.00rad) translateZ(0px);"
+                style="width: 1000px; height: auto; margin-left: 0.00px; margin-top: 0.00px; transform: rotate(0.00rad) translateZ(0px); -webkit-transform: rotate(0.00rad) translateZ(0px);"
                 title=""></span></p>
     <p class="c2 c13"><span class="c1"></span></p>
     <p class="c2"><span class="c5">Task 0: Warm-up</span></p>
@@ -1038,9 +1041,9 @@ index_html = r"""
             first document is </span><span class="c14">Task 0: Warm-up</span><span class="c1">. Click on &ldquo;Access
             document&rdquo; to open it.</span></p>
     <p class="c2 c21"><span
-            style="overflow: hidden; display: inline-block; margin: 0.00px 0.00px; border: 0.00px solid #000000; transform: rotate(0.00rad) translateZ(0px); -webkit-transform: rotate(0.00rad) translateZ(0px); width: 601.70px; height: 157.33px;"><img
+            style="overflow: hidden; display: inline-block; margin: 0.00px 0.00px; border: 0.00px solid #000000; transform: rotate(0.00rad) translateZ(0px); -webkit-transform: rotate(0.00rad) translateZ(0px); width: 1200px; height: auto;"><img
                 alt="" src="images/image5.png"
-                style="width: 601.70px; height: 157.33px; margin-left: 0.00px; margin-top: 0.00px; transform: rotate(0.00rad) translateZ(0px); -webkit-transform: rotate(0.00rad) translateZ(0px);"
+                style="width: 1000px; height: auto; margin-left: 0.00px; margin-top: 0.00px; transform: rotate(0.00rad) translateZ(0px); -webkit-transform: rotate(0.00rad) translateZ(0px);"
                 title=""></span></p>
     <p class="c2"><span class="c1">You are now in the document editor where you can type your text and interact with
             LLMs.</span></p>
@@ -1051,17 +1054,17 @@ index_html = r"""
             and enter your query. If you don&rsquo;t type anything, the model will be asked to fix the grammar.</span>
     </p>
     <p class="c2"><span
-            style="overflow: hidden; display: inline-block; margin: 0.00px 0.00px; border: 0.00px solid #000000; transform: rotate(0.00rad) translateZ(0px); -webkit-transform: rotate(0.00rad) translateZ(0px); width: 601.70px; height: 192.00px;"><img
+            style="overflow: hidden; display: inline-block; margin: 0.00px 0.00px; border: 0.00px solid #000000; transform: rotate(0.00rad) translateZ(0px); -webkit-transform: rotate(0.00rad) translateZ(0px); width: 1200px; height: auto;"><img
                 alt="" src="images/image3.png"
-                style="width: 601.70px; height: 192.00px; margin-left: 0.00px; margin-top: 0.00px; transform: rotate(0.00rad) translateZ(0px); -webkit-transform: rotate(0.00rad) translateZ(0px);"
+                style="width: 1000px; height: auto; margin-left: 0.00px; margin-top: 0.00px; transform: rotate(0.00rad) translateZ(0px); -webkit-transform: rotate(0.00rad) translateZ(0px);"
                 title=""></span></p>
     <p class="c2"><span>To send a continuation query, insert the cursor in the place where you want the text to be
             continued and click </span><span class="c14">CTRL+Q</span><span class="c1">. Type your query. If you
             don&rsquo;t type anything, the model will be prompted to continue your text.</span></p>
     <p class="c2"><span
-            style="overflow: hidden; display: inline-block; margin: 0.00px 0.00px; border: 0.00px solid #000000; transform: rotate(0.00rad) translateZ(0px); -webkit-transform: rotate(0.00rad) translateZ(0px); width: 601.70px; height: 237.33px;"><img
+            style="overflow: hidden; display: inline-block; margin: 0.00px 0.00px; border: 0.00px solid #000000; transform: rotate(0.00rad) translateZ(0px); -webkit-transform: rotate(0.00rad) translateZ(0px); width: 1200px; height: auto;"><img
                 alt="" src="images/image2.png"
-                style="width: 601.70px; height: 237.33px; margin-left: 0.00px; margin-top: 0.00px; transform: rotate(0.00rad) translateZ(0px); -webkit-transform: rotate(0.00rad) translateZ(0px);"
+                style="width: 1000px; height: auto; margin-left: 0.00px; margin-top: 0.00px; transform: rotate(0.00rad) translateZ(0px); -webkit-transform: rotate(0.00rad) translateZ(0px);"
                 title=""></span></p>
     <p class="c2"><span class="c1">When the model answer comes back, a new window will appear. You will have the
             possibility to either accept or reject the proposed text. If you accept it, the text will be copied to the
@@ -1069,9 +1072,9 @@ index_html = r"""
     <p class="c2"><span class="c1">Note: you may edit your text while waiting for the response. Your changes will be
             merged with the model&rsquo;s changes.</span></p>
     <p class="c2 c22"><span
-            style="overflow: hidden; display: inline-block; margin: 0.00px 0.00px; border: 0.00px solid #000000; transform: rotate(0.00rad) translateZ(0px); -webkit-transform: rotate(0.00rad) translateZ(0px); width: 601.70px; height: 216.00px;"><img
+            style="overflow: hidden; display: inline-block; margin: 0.00px 0.00px; border: 0.00px solid #000000; transform: rotate(0.00rad) translateZ(0px); -webkit-transform: rotate(0.00rad) translateZ(0px); width: 1200px; height: auto;"><img
                 alt="" src="images/image4.png"
-                style="width: 601.70px; height: 216.00px; margin-left: 0.00px; margin-top: 0.00px; transform: rotate(0.00rad) translateZ(0px); -webkit-transform: rotate(0.00rad) translateZ(0px);"
+                style="width: 1000px; height: auto; margin-left: 0.00px; margin-top: 0.00px; transform: rotate(0.00rad) translateZ(0px); -webkit-transform: rotate(0.00rad) translateZ(0px);"
                 title=""></span></p>
     <p class="c2"><span class="c1">You may experiment with the system for max. 5 minutes. When the time is over, you
             will get a pop-up notification that you should start working on other tasks.</span></p>
