@@ -32,6 +32,7 @@ creative = [
 
 user_html = ""
 for user in users:
+    random.seed(user)
     argumentative_for_user = random.sample(argumentative, 2)
     creative_for_user = random.sample(creative, 2)
 
@@ -1016,7 +1017,7 @@ index_html = r"""
         <li class="c2 c11 li-bullet-0"><span>Go to </span><span class="c4"><a class="c3"
                     href="https://www.google.com/url?q=https://txaitd.ukp.informatik.tu-darmstadt.de&amp;sa=D&amp;source=editors&amp;ust=1761666145168465&amp;usg=AOvVaw2gA6CB50wfKRk8R0c8X_8m">https://txaitd.ukp.informatik.tu-darmstadt.de</a></span>
         </li>
-        <li class="c2 c11 li-bullet-0"><span class="c1">We have sent you your username and password via email. Enter
+        <li class="c2 c11 li-bullet-0"><span class="c1">We have provided you with your username and password. Enter
                 them to log into the system. </span></li>
     </ul>
     <p class="c2"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span
@@ -1028,7 +1029,7 @@ index_html = r"""
         <li class="c2 c11 li-bullet-0"><span class="c1">After the login, you will be redirected to Documents section.
                 You will work only with this part of the Software.</span></li>
     </ul>
-    <p class="c2 c21"><span
+    <p class="c2"><span
             style="overflow: hidden; display: inline-block; margin: 0.00px 0.00px; border: 0.00px solid #000000; transform: rotate(0.00rad) translateZ(0px); -webkit-transform: rotate(0.00rad) translateZ(0px); width: 1200px; height: auto;"><img
                 alt="" src="images/image6.png"
                 style="width: 1000px; height: auto; margin-left: 0.00px; margin-top: 0.00px; transform: rotate(0.00rad) translateZ(0px); -webkit-transform: rotate(0.00rad) translateZ(0px);"
@@ -1040,7 +1041,7 @@ index_html = r"""
     <p class="c2"><span>In the Documents overview, you will see four documents for the warm-up and three tasks. The
             first document is </span><span class="c14">Task 0: Warm-up</span><span class="c1">. Click on &ldquo;Access
             document&rdquo; to open it.</span></p>
-    <p class="c2 c21"><span
+    <p class="c2"><span
             style="overflow: hidden; display: inline-block; margin: 0.00px 0.00px; border: 0.00px solid #000000; transform: rotate(0.00rad) translateZ(0px); -webkit-transform: rotate(0.00rad) translateZ(0px); width: 1200px; height: auto;"><img
                 alt="" src="images/image5.png"
                 style="width: 1000px; height: auto; margin-left: 0.00px; margin-top: 0.00px; transform: rotate(0.00rad) translateZ(0px); -webkit-transform: rotate(0.00rad) translateZ(0px);"
