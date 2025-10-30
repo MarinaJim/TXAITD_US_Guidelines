@@ -859,7 +859,7 @@
     </style>
 </head>
 
-<body class="c7 doc-content">
+<body class="c7 doc-content" id="start">
     <p class="c12"><span class="c16 c6 c20">Trustworthy and Explainable AI-generated Text Detection</span></p>
     <p class="c9"><span class="c1"></span></p>
     <p class="c12"><span class="c16 c6 c19">User Study Guidelines</span></p>
@@ -1103,17 +1103,17 @@
 <script>
     const topics = {
 
-"waterlemon": {
+"watermelon": {
     "argumentative":
     [
-    `Workers across industries are concerned about AI coming for their work. Are you worried about AI taking human jobs? Why or why not? Which types of work do you think are most vulnerable to automation? Do you think the fears about AI are overblown?`,
-    `Is it cheating when students use artificial intelligence to help them with their schoolwork? In your opinion, how, if at all, should students be allowed to use AI in school? What do you see as benefits and drawbacks of using AI for doing homework?`
+    `Should Grades Be Based on Excellence or Effort? Some people think that too many students today wrongly expect to be rewarded for their efforts rather than the quality of their work. Do you agree? Do you think marks are accurate reflections of students’ learning? What do you think student grades should be based on? How much, if at all, should effort and hard work factor in?`,
+    `Is It Ethical for Teachers to Use AI to Grade Papers? Many schools do not allow students to use artificial intelligence to complete their assignments. Should teachers be held to the same standard? Do you think teachers should be able to use the technology at all? If so, in which instances would it be acceptable, and what guidelines should teachers follow when using it?`
     ],
 
     "creative":
     [
-    `What if the theory that COVID-19 vaccines contain microchips were true?`,
-    `What if we could restore the diminishing populations of endangered species by cloning them?`
+    `What if no one ever had to work again because robots took care of everything?`,
+    `What if you could test the outcomes of different decisions in virtual reality with 100% accuracy?`
     ],
     },
 
@@ -1134,15 +1134,15 @@
     }
     const urlParams = new URLSearchParams(window.location.search);
     const userId = urlParams.get("id");
-    const argumentative = document.getElementById("argumentative");
-    const creative = document.getElementById("creative");
     if (userId && topics[userId]) {
+        const argumentative = document.getElementById("argumentative");
+        const creative = document.getElementById("creative");
         argumentative.innerHTML = `<li class="c2 c11 li-bullet-0"><span class="c1">${topics[userId].argumentative[0]}</span></li>
         <li class="c2 c11 li-bullet-0"><span class="c1">${topics[userId].argumentative[1]}</span></li>`
         creative.innerHTML = `<li class="c2 c11 li-bullet-0"><span class="c1">${topics[userId].creative[0]}</span></li>
         <li class="c2 c11 li-bullet-0"><span class="c1">${topics[userId].creative[1]}</span></li>`
     } else {
-        argumentative.innerHTML = '<li class="c2 c11 li-bullet-0"><span class="c1">Invalid user ID. Please check your URL. </span></li>'
-        creative.innerHTML = '<li class="c2 c11 li-bullet-0"><span class="c1">Invalid user ID. Please check your URL. </span></li>'
+        const start = document.getElementById("start");
+        start.innerHTML = `<p class="c0"><span class="c1">Invalid user ID. Please check your URL:</span></p>`;
     }
 </script>

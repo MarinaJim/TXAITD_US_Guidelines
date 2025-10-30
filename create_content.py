@@ -1,6 +1,6 @@
 import random
 
-users = ["waterlemon", "rotation"]
+users = ["watermelon", "rotation"]
 
 argumentative = [
     """Is it cheating when students use artificial intelligence to help them with their schoolwork? In your opinion, how, if at all, should students be allowed to use AI in school? What do you see as benefits and drawbacks of using AI for doing homework?""",
@@ -913,7 +913,7 @@ index_html = r"""
     </style>
 </head>
 
-<body class="c7 doc-content">
+<body class="c7 doc-content" id="start">
     <p class="c12"><span class="c16 c6 c20">Trustworthy and Explainable AI-generated Text Detection</span></p>
     <p class="c9"><span class="c1"></span></p>
     <p class="c12"><span class="c16 c6 c19">User Study Guidelines</span></p>
@@ -1162,16 +1162,16 @@ index_html += user_html + """
     }
     const urlParams = new URLSearchParams(window.location.search);
     const userId = urlParams.get("id");
-    const argumentative = document.getElementById("argumentative");
-    const creative = document.getElementById("creative");
     if (userId && topics[userId]) {
+        const argumentative = document.getElementById("argumentative");
+        const creative = document.getElementById("creative");
         argumentative.innerHTML = `<li class="c2 c11 li-bullet-0"><span class="c1">${topics[userId].argumentative[0]}</span></li>
         <li class="c2 c11 li-bullet-0"><span class="c1">${topics[userId].argumentative[1]}</span></li>`
         creative.innerHTML = `<li class="c2 c11 li-bullet-0"><span class="c1">${topics[userId].creative[0]}</span></li>
         <li class="c2 c11 li-bullet-0"><span class="c1">${topics[userId].creative[1]}</span></li>`
     } else {
-        argumentative.innerHTML = '<li class="c2 c11 li-bullet-0"><span class="c1">Invalid user ID. Please check your URL. </span></li>'
-        creative.innerHTML = '<li class="c2 c11 li-bullet-0"><span class="c1">Invalid user ID. Please check your URL. </span></li>'
+        const start = document.getElementById("start");
+        start.innerHTML = `<p class="c0"><span class="c1">Invalid user ID. Please check your URL:</span></p>`;
     }
 </script>
 """
