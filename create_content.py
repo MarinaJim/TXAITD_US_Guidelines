@@ -1,6 +1,6 @@
 import random
 
-users = ["lemon", "pipe"]
+users = ["waterlemon", "rotation"]
 
 argumentative = [
     """Is it cheating when students use artificial intelligence to help them with their schoolwork? In your opinion, how, if at all, should students be allowed to use AI in school? What do you see as benefits and drawbacks of using AI for doing homework?""",
