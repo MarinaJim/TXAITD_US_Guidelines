@@ -1078,7 +1078,7 @@ index_html = r"""
                 style="width: 1000px; height: auto; margin-left: 0.00px; margin-top: 0.00px; transform: rotate(0.00rad) translateZ(0px); -webkit-transform: rotate(0.00rad) translateZ(0px);"
                 title=""></span></p>
     <p class="c2"><span class="c1">You may experiment with the system for max. 5 minutes. When the time is over, you
-            will get a pop-up notification that you should start working on other tasks.</span></p>
+            will get a pop-up notification that you should start working on other tasks. Click on the Done button in the top-left corner and return to the document overview.</span></p>
     <p class="c2"><span class="c16 c6 c8">Part 2: LLM-powered writing</span></p>
     <p class="c2"><span class="c5">Task 1: Argumentative writing</span></p>
     <p class="c2"><span>In this part, you have 10 minutes to write an argumentative essay. You </span><span
@@ -1093,7 +1093,7 @@ index_html = r"""
             structure and conclusion. Try to find strong arguments to defend your position on the topic, as well as to
             counter it with opposite arguments. Approximate expected length is 300-400 words, but it may vary.</span>
     </p>
-    <p class="c2"><span class="c1">After 10 minutes are over, you get a notification that you should wrap-up your work.</span></p>
+    <p class="c2"><span class="c1">After 10 minutes are over, you get a notification that you should wrap-up your work. Click on the Done button in the top-left corner and return to the document overview.</span></p>
     <p class="c2"><span class="c10 c6">Now you may take a 5 minute break before moving on to the next task!</span></p>
 
     <p class="c2"><span class="c5">Task 2: Creative writing</span></p>
@@ -1116,7 +1116,7 @@ index_html = r"""
                 economical, or cultural impact that such changes could have on our society.</span></li>
     </ul>
     <p class="c2"><span class="c1">Approximate expected length is 300-400 words, but it may vary. After 10 minutes are
-            over, you get a notification that you should wrap-up your work and move on to the next part.</span></p>
+            over, you get a notification that you should wrap-up your work and move on to the next part. Click on the Done button in the top-left corner and return to the document overview.</span></p>
     <p class="c2"><span class="c10 c6">Now you may take a 5 minute break before moving on to the next task!</span></p>
     <p class="c2"><span class="c5">Task 3: Explanatory writing</span></p>
     <p class="c2"><span>In this part, you have 10 minutes to write an explanatory text. You </span><span
@@ -1143,7 +1143,8 @@ index_html = r"""
             period/technology etc, so that people without deep knowledge can get a good understanding from your
             text.</span></p>
     <p class="c2"><span class="c1">Approximate expected length is 250-400 words, but it may vary. After 10 minutes are
-            over, you get a notification that you should wrap-up your work and move on to the survey.</span></p>
+            over, you get a notification that you should wrap-up your work and move on to the survey. 
+            Click on the Done button in the top-left corner and return to the document overview. You may close the program now.</span></p>
     <p class="c2"><span class="c6 c8">Part 3: User Experience Survey</span></p>
     <p class="c2"><span>After you finished all interactions, please fill out</span><span
             class="c6 c8">&nbsp;</span><span class="c4"><a class="c3"
