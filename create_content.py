@@ -1,8 +1,14 @@
 import random
+from create_users import create_users, save_as_csv, randomize
 
-users = ["watermelon", "rotation", "sleep", "cube"]
+N_TASKS = 4
+N_USERS = 10
+N_EXAMPLES = 2
+users = create_users(n=N_USERS, n_tasks=N_TASKS)
+save_as_csv(users, "users/users.csv")
+user_names = [user[3] for user in users]
 
-argumentative = [
+ARGUMENTATIVE = [
     """Is it cheating when students use artificial intelligence to help them with their schoolwork? In your opinion, how, if at all, should students be allowed to use AI in school? What do you see as benefits and drawbacks of using AI for doing homework?""",
     """Should 16-Year-Olds Be Allowed to Vote? In your opinion, is the current minimum legal voting age of 18 fair and appropriate?  What influence would lowering the threshold to 16 years have on the society?""",
     """Boys Are Spending More Time Gaming. Is That a Problem? Some say video games are a chief reason boys and young men are struggling. Others say games serve an important role in teens’ lives. What do you think? What can gaming bring to a teen’s life? What other activities, if any, does it take away from?""",
@@ -17,7 +23,7 @@ argumentative = [
     """Should Grades Be Based on Excellence or Effort? Some people think that too many students today wrongly expect to be rewarded for their efforts rather than the quality of their work. Do you agree? Do you think marks are accurate reflections of students’ learning? What do you think student grades should be based on? How much, if at all, should effort and hard work factor in?"""
 ]
 
-creative = [
+CREATIVE = [
     """What if people had microchips in their eyes that allowed them to record everything they see?""",
     """What if no one ever had to work again because robots took care of everything?""",
     """What if our memories could be stolen and sold on the black market?""",
@@ -31,10 +37,21 @@ creative = [
 ]
 
 user_html = ""
-for user in users:
-    random.seed(user)
-    argumentative_for_user = random.sample(argumentative, 2)
-    creative_for_user = random.sample(creative, 2)
+randomized_creative = randomize(CREATIVE)
+randomized_argumentative = randomize(ARGUMENTATIVE)
+
+for user in user_names:
+    argumentative_for_user = []
+    creative_for_user = []
+    i = 0
+    while i < N_EXAMPLES:
+        if not randomized_argumentative:
+            randomized_argumentative.extend(randomize(ARGUMENTATIVE))
+        argumentative_for_user.append(randomized_argumentative.pop())
+        if not randomized_creative:
+            randomized_creative.extend(randomize(CREATIVE))
+        creative_for_user.append(randomized_creative.pop())
+        i += 1
 
     user_html += f"""
 \"{user}\": {{
@@ -53,8 +70,6 @@ for user in users:
 """
 
 index_html = r"""
-<html>
-
 <head>
     <meta content="text/html; charset=UTF-8" http-equiv="content-type">
     <style type="text/css">
@@ -913,6 +928,8 @@ index_html = r"""
     </style>
 </head>
 
+<html>
+
 <body class="c7 doc-content" id="start">
     <p class="c12"><span class="c16 c6 c20">Trustworthy and Explainable AI-generated Text Detection</span></p>
     <p class="c9"><span class="c1"></span></p>
@@ -1177,6 +1194,12 @@ index_html += user_html + """
         start.innerHTML = `<p class="c0"><span class="c1">Invalid user ID. Please check your URL:</span></p>`;
     }
 </script>
+
+<style>
+form>* {
+  margin: 10px;
+}
+</style>
 """
 
 with open("index.html", "w") as f:
