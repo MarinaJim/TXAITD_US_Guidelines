@@ -1,4 +1,6 @@
 from create_users import create_users, save_as_csv, randomize
+import json
+
 N_TASKS = 4
 N_USERS = 3
 N_EXAMPLES = 2
@@ -50,13 +52,12 @@ def get_human_only_tasks(used_questions: list[str], all_questions: list[str]) ->
             i += 1
     return tasks
 
-def get_user_html(users):
-    user_html = ""
+def get_user_question_mapping(users):
     randomized_creative = randomize(CREATIVE)
     randomized_argumentative = randomize(ARGUMENTATIVE)
-
+    to_save = []
     for user in users:
-        user_name = user[3]
+        model_task_mapping = user["modelTaskMapping"]
 
         argumentative_for_user = []
         creative_for_user = []
@@ -70,8 +71,9 @@ def get_user_html(users):
             creative_for_user.append(randomized_creative.pop())
             i += 1
         
-        human_only_task = user[-1]["noLLM"]
+        human_only_task = model_task_mapping["noLLM"]
         human_for_user = []
+
         match human_only_task:
             case 1:
                 human_for_user = get_human_only_tasks(argumentative_for_user, ARGUMENTATIVE)
@@ -82,26 +84,36 @@ def get_user_html(users):
             case _:
                 human_for_user = ["", ""]
                 human_only_name = "humanExplanatory"
+            
+        username = user["userName"]
+        to_save.append({"name": username, "modelTaskMapping": model_task_mapping,
+                        "argumentative": argumentative_for_user, "creative": creative_for_user,
+                        "human": human_for_user, "humanOnlyName": human_only_name})
+    return to_save
 
+def get_user_html(user_mapping):
+    user_html = ""
+    for mapping in user_mapping:
+        username = mapping["name"]
         user_html += f"""
-    \"{user_name}\": {{
-        \"humanOnly\": `{human_only_name}`,
+    \"{username}\": {{
+        \"humanOnly\": `{mapping["humanOnlyName"]}`,
         \"argumentative\":
         [
-        `{argumentative_for_user[0]}`,
-        `{argumentative_for_user[1]}`
+        `{mapping["argumentative"][0]}`,
+        `{mapping["argumentative"][1]}`
         ],
 
         \"creative\":
         [
-        `{creative_for_user[0]}`,
-        `{creative_for_user[1]}`
+        `{mapping["creative"][0]}`,
+        `{mapping["creative"][1]}`
         ],
 
         \"human\":
         [
-        `{human_for_user[0]}`,
-        `{human_for_user[1]}`
+        `{mapping["human"][0]}`,
+        `{mapping["human"][1]}`
         ],
         }},
     """
@@ -1460,10 +1472,15 @@ def get_explanatory_text(use_llm: bool) -> str:
 def main():
     users = create_users(n=N_USERS, n_tasks=N_TASKS)
     save_as_csv(users, "users/users.csv")
+
+    user_mapping = get_user_question_mapping(users)
+    with open("users/user_stats.json", "w") as f:
+        json.dump(user_mapping, f)
+
     index_html = get_start_html()
     index_html += get_argumentative_text(use_llm=False) + get_creative_text(use_llm=False) + get_explanatory_text(use_llm=False)
     index_html += get_argumentative_text(use_llm=True) + get_argumentative_text(use_llm=True) + get_explanatory_text(use_llm=True)
-    index_html += get_conclusion() + get_user_html(users=users) + get_js_functions()
+    index_html += get_conclusion() + get_user_html(user_mapping=user_mapping) + get_js_functions()
 
     with open("index.html", "w") as f:
         f.write(index_html)

@@ -7,9 +7,6 @@ from nltk.corpus import words
 import secrets
 import pandas as pd
 
-COLS = ["extId","firstName","lastName","userName", "email","roles", "password",
-            "modelTaskMapping"]
-
 SYMBOLS = list(range(20))
 SYMBOLS.extend(["?", "!", ".", ","])
 
@@ -71,8 +68,16 @@ def create_users(n: int, n_tasks: int = 4):
         ext_id = random.randint(100, 1000)
         task_llm_assignment = assign_llms_to_tasks(sorted_llms, sorted_temperatures, n_tasks)
         no_llm_task = 1 + (i % (n_tasks - 1))
-        user = [ext_id, "user", "user", username, username + "@email.com",
-                "Student*in", password, {"noLLM": no_llm_task, "LLM": task_llm_assignment}]
+        user = {
+            "extId": ext_id,
+            "firstName": "user",
+            "lastName": "user",
+            "userName": username,
+            "email": username + "@email.com",
+            "roles": "Student*in",
+            "password": password,
+            "modelTaskMapping": {"noLLM": no_llm_task, "LLM": task_llm_assignment}
+        }
         users.append(user)
     return users
 
@@ -85,14 +90,14 @@ def save_as_csv(users: list[list], path: str) -> None:
     :param path: Path to csv file
     :type path: str
     """
-    df = pd.DataFrame(columns=COLS, data=users)
+    df = pd.DataFrame(data=users)
     df["modelTaskMapping"] = df["modelTaskMapping"].apply(json.dumps)
     df.to_csv(path, index=False)
 
 def main():
     n_users = 1
     n_tasks = 4
-    path = "csv_user_creation/users.csv"
+    path = "users/users.csv"
     users = create_users(n_users, n_tasks)
     save_as_csv(users, path)
 
