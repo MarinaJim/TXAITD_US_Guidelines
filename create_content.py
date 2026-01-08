@@ -1,12 +1,7 @@
-import random
 from create_users import create_users, save_as_csv, randomize
-
 N_TASKS = 4
-N_USERS = 10
+N_USERS = 3
 N_EXAMPLES = 2
-users = create_users(n=N_USERS, n_tasks=N_TASKS)
-save_as_csv(users, "users/users.csv")
-user_names = [user[3] for user in users]
 
 ARGUMENTATIVE = [
     """Is it cheating when students use artificial intelligence to help them with their schoolwork? In your opinion, how, if at all, should students be allowed to use AI in school? What do you see as benefits and drawbacks of using AI for doing homework?""",
@@ -36,40 +31,85 @@ CREATIVE = [
     """What if it were forbidden to sell or buy products containing meat?"""
 ]
 
-user_html = ""
-randomized_creative = randomize(CREATIVE)
-randomized_argumentative = randomize(ARGUMENTATIVE)
-
-for user in user_names:
-    argumentative_for_user = []
-    creative_for_user = []
+def get_human_only_tasks(used_questions: list[str], all_questions: list[str]) -> list[str]:
+    """
+    Retrieves N_EXAMPLES questions for the human-only task.
+    used_questions: Questions from this task type that were already used for the LLM task
+    all_questions: All possible questions
+    returns: N_EXAMPLES questions
+    """
     i = 0
+    tasks = []
+    randomized_tasks = randomize(all_questions)
     while i < N_EXAMPLES:
-        if not randomized_argumentative:
-            randomized_argumentative.extend(randomize(ARGUMENTATIVE))
-        argumentative_for_user.append(randomized_argumentative.pop())
-        if not randomized_creative:
-            randomized_creative.extend(randomize(CREATIVE))
-        creative_for_user.append(randomized_creative.pop())
-        i += 1
+        if not randomized_tasks:
+            randomized_tasks.extend(randomize(all_questions))
+        task = randomized_tasks.pop()
+        if task not in used_questions:
+            tasks.append(task)
+            i += 1
+    return tasks
 
-    user_html += f"""
-\"{user}\": {{
-    \"argumentative\":
-    [
-    `{argumentative_for_user[0]}`,
-    `{argumentative_for_user[1]}`
-    ],
+def get_user_html(users):
+    user_html = ""
+    randomized_creative = randomize(CREATIVE)
+    randomized_argumentative = randomize(ARGUMENTATIVE)
 
-    \"creative\":
-    [
-    `{creative_for_user[0]}`,
-    `{creative_for_user[1]}`
-    ],
-    }},
-"""
+    for user in users:
+        user_name = user[3]
 
-index_html = r"""
+        argumentative_for_user = []
+        creative_for_user = []
+        i = 0
+        while i < N_EXAMPLES:
+            if not randomized_argumentative:
+                randomized_argumentative.extend(randomize(ARGUMENTATIVE))
+            argumentative_for_user.append(randomized_argumentative.pop())
+            if not randomized_creative:
+                randomized_creative.extend(randomize(CREATIVE))
+            creative_for_user.append(randomized_creative.pop())
+            i += 1
+        
+        human_only_task = user[-1]["noLLM"]
+        human_for_user = []
+        match human_only_task:
+            case 1:
+                human_for_user = get_human_only_tasks(argumentative_for_user, ARGUMENTATIVE)
+                human_only_name = "humanArgumentative"
+            case 2:
+                human_for_user = get_human_only_tasks(creative_for_user, CREATIVE)
+                human_only_name = "humanCreative"
+            case _:
+                human_for_user = ["", ""]
+                human_only_name = "humanExplanatory"
+
+        user_html += f"""
+    \"{user_name}\": {{
+        \"humanOnly\": `{human_only_name}`,
+        \"argumentative\":
+        [
+        `{argumentative_for_user[0]}`,
+        `{argumentative_for_user[1]}`
+        ],
+
+        \"creative\":
+        [
+        `{creative_for_user[0]}`,
+        `{creative_for_user[1]}`
+        ],
+
+        \"human\":
+        [
+        `{human_for_user[0]}`,
+        `{human_for_user[1]}`
+        ],
+        }},
+    """
+    return user_html
+
+
+def get_start_html():
+    return r"""
 <head>
     <meta content="text/html; charset=UTF-8" http-equiv="content-type">
     <style type="text/css">
@@ -128,6 +168,9 @@ index_html = r"""
         .lst-kix_x6aktldezdgv-1>li {
             counter-increment: lst-ctn-kix_x6aktldezdgv-1
         }
+        .lst-kix_x7bktldezdgv-1>li {
+            counter-increment: lst-ctn-kix_x7bktldezdgv-1
+        }
 
         .lst-kix_101bpdgvbzvd-1>li:before {
             content: "-  "
@@ -159,6 +202,9 @@ index_html = r"""
 
         ol.lst-kix_x6aktldezdgv-4.start {
             counter-reset: lst-ctn-kix_x6aktldezdgv-4 0
+        }
+        ol.lst-kix_x7bktldezdgv-4.start {
+            counter-reset: lst-ctn-kix_x7bktldezdgv-4 0
         }
 
         ol.lst-kix_fe9brg7u0cec-7 {
@@ -196,11 +242,17 @@ index_html = r"""
         ol.lst-kix_x6aktldezdgv-7.start {
             counter-reset: lst-ctn-kix_x6aktldezdgv-7 0
         }
+        ol.lst-kix_x7bktldezdgv-7.start {
+            counter-reset: lst-ctn-kix_x7bktldezdgv-7 0
+        }
 
         .lst-kix_fe9brg7u0cec-3>li:before {
             content: "" counter(lst-ctn-kix_fe9brg7u0cec-3, decimal) ". "
         }
 
+        .lst-kix_x7bktldezdgv-3>li {
+            counter-increment: lst-ctn-kix_x7bktldezdgv-3
+        }
         .lst-kix_x6aktldezdgv-3>li {
             counter-increment: lst-ctn-kix_x6aktldezdgv-3
         }
@@ -213,8 +265,15 @@ index_html = r"""
             counter-increment: lst-ctn-kix_x6aktldezdgv-0
         }
 
+        .lst-kix_x7bktldezdgv-0>li {
+            counter-increment: lst-ctn-kix_x7bktldezdgv-0
+        }
+
         ol.lst-kix_x6aktldezdgv-1.start {
             counter-reset: lst-ctn-kix_x6aktldezdgv-1 0
+        }
+        ol.lst-kix_x7bktldezdgv-1.start {
+            counter-reset: lst-ctn-kix_x7bktldezdgv-1 0
         }
 
         .lst-kix_cmtnlngtu4bi-1>li:before {
@@ -269,6 +328,10 @@ index_html = r"""
             counter-reset: lst-ctn-kix_x6aktldezdgv-5 0
         }
 
+        ol.lst-kix_x7bktldezdgv-5.start {
+            counter-reset: lst-ctn-kix_x7bktldezdgv-5 0
+        }
+
         .lst-kix_fe9brg7u0cec-0>li {
             counter-increment: lst-ctn-kix_fe9brg7u0cec-0
         }
@@ -297,6 +360,30 @@ index_html = r"""
             list-style-type: none
         }
 
+        ol.lst-kix_x7bktldezdgv-0 {
+            list-style-type: none
+        }
+
+        .lst-kix_x7bktldezdgv-8>li {
+            counter-increment: lst-ctn-kix_x7bktldezdgv-8
+        }
+
+        ol.lst-kix_x7bktldezdgv-1 {
+            list-style-type: none
+        }
+
+        ol.lst-kix_x7bktldezdgv-2 {
+            list-style-type: none
+        }
+
+        ol.lst-kix_x7bktldezdgv-3 {
+            list-style-type: none
+        }
+
+        ol.lst-kix_x7bktldezdgv-4 {
+            list-style-type: none
+        }
+
         .lst-kix_fe9brg7u0cec-6>li {
             counter-increment: lst-ctn-kix_fe9brg7u0cec-6
         }
@@ -305,11 +392,19 @@ index_html = r"""
             list-style-type: none
         }
 
+        ol.lst-kix_x7bktldezdgv-5 {
+            list-style-type: none
+        }
+
         ul.lst-kix_101bpdgvbzvd-0 {
             list-style-type: none
         }
 
         ol.lst-kix_x6aktldezdgv-6 {
+            list-style-type: none
+        }
+
+        ol.lst-kix_x7bktldezdgv-6 {
             list-style-type: none
         }
 
@@ -325,11 +420,23 @@ index_html = r"""
             list-style-type: none
         }
 
+        .lst-kix_x7bktldezdgv-2>li {
+            counter-increment: lst-ctn-kix_x7bktldezdgv-2
+        }
+
+        ol.lst-kix_x7bktldezdgv-7 {
+            list-style-type: none
+        }
+
         ul.lst-kix_101bpdgvbzvd-2 {
             list-style-type: none
         }
 
         ol.lst-kix_x6aktldezdgv-8 {
+            list-style-type: none
+        }
+
+        ol.lst-kix_x7bktldezdgv-8 {
             list-style-type: none
         }
 
@@ -351,6 +458,10 @@ index_html = r"""
 
         .lst-kix_x6aktldezdgv-5>li {
             counter-increment: lst-ctn-kix_x6aktldezdgv-5
+        }
+
+        .lst-kix_x7bktldezdgv-5>li {
+            counter-increment: lst-ctn-kix_x7bktldezdgv-5
         }
 
         ul.lst-kix_101bpdgvbzvd-7 {
@@ -385,6 +496,10 @@ index_html = r"""
             counter-reset: lst-ctn-kix_x6aktldezdgv-6 0
         }
 
+        ol.lst-kix_x7bktldezdgv-6.start {
+            counter-reset: lst-ctn-kix_x7bktldezdgv-6 0
+        }
+
         .lst-kix_22x579xxms5k-0>li:before {
             content: "-  "
         }
@@ -401,6 +516,18 @@ index_html = r"""
             counter-reset: lst-ctn-kix_x6aktldezdgv-3 0
         }
 
+        .lst-kix_x7bktldezdgv-3>li:before {
+            content: "" counter(lst-ctn-kix_x7bktldezdgv-3, decimal) ". "
+        }
+
+        .lst-kix_x7bktldezdgv-4>li:before {
+            content: "" counter(lst-ctn-kix_x7bktldezdgv-4, lower-latin) ". "
+        }
+
+        ol.lst-kix_x7bktldezdgv-3.start {
+            counter-reset: lst-ctn-kix_x7bktldezdgv-3 0
+        }
+
         ul.lst-kix_geynw9iyvxg3-8 {
             list-style-type: none
         }
@@ -413,6 +540,14 @@ index_html = r"""
             content: "" counter(lst-ctn-kix_x6aktldezdgv-6, decimal) ". "
         }
 
+        .lst-kix_x7bktldezdgv-2>li:before {
+            content: "" counter(lst-ctn-kix_x7bktldezdgv-2, lower-roman) ". "
+        }
+
+        .lst-kix_x7bktldezdgv-6>li:before {
+            content: "" counter(lst-ctn-kix_x7bktldezdgv-6, decimal) ". "
+        }
+
         ul.lst-kix_geynw9iyvxg3-6 {
             list-style-type: none
         }
@@ -423,6 +558,10 @@ index_html = r"""
 
         .lst-kix_x6aktldezdgv-7>li {
             counter-increment: lst-ctn-kix_x6aktldezdgv-7
+        }
+
+        .lst-kix_x7bktldezdgv-7>li {
+            counter-increment: lst-ctn-kix_x7bktldezdgv-7
         }
 
         ul.lst-kix_geynw9iyvxg3-4 {
@@ -451,6 +590,18 @@ index_html = r"""
 
         .lst-kix_x6aktldezdgv-8>li:before {
             content: "" counter(lst-ctn-kix_x6aktldezdgv-8, lower-roman) ". "
+        }
+
+        .lst-kix_x7bktldezdgv-0>li:before {
+            content: "" counter(lst-ctn-kix_x7bktldezdgv-0, decimal) ". "
+        }
+
+        .lst-kix_x7bktldezdgv-7>li:before {
+            content: "" counter(lst-ctn-kix_x7bktldezdgv-7, lower-latin) ". "
+        }
+
+        .lst-kix_x7bktldezdgv-8>li:before {
+            content: "" counter(lst-ctn-kix_x7bktldezdgv-8, lower-roman) ". "
         }
 
         ul.lst-kix_22x579xxms5k-1 {
@@ -504,6 +655,9 @@ index_html = r"""
         .lst-kix_x6aktldezdgv-1>li:before {
             content: "" counter(lst-ctn-kix_x6aktldezdgv-1, lower-latin) ". "
         }
+        .lst-kix_x7bktldezdgv-1>li:before {
+            content: "" counter(lst-ctn-kix_x7bktldezdgv-1, lower-latin) ". "
+        }
 
         ul.lst-kix_22x579xxms5k-5 {
             list-style-type: none
@@ -537,6 +691,10 @@ index_html = r"""
             counter-reset: lst-ctn-kix_x6aktldezdgv-0 0
         }
 
+        ol.lst-kix_x7bktldezdgv-0.start {
+            counter-reset: lst-ctn-kix_x7bktldezdgv-0 0
+        }
+
         .lst-kix_22x579xxms5k-5>li:before {
             content: "-  "
         }
@@ -559,6 +717,10 @@ index_html = r"""
 
         .lst-kix_x6aktldezdgv-5>li:before {
             content: "" counter(lst-ctn-kix_x6aktldezdgv-5, lower-roman) ". "
+        }
+
+        .lst-kix_x7bktldezdgv-5>li:before {
+            content: "" counter(lst-ctn-kix_x7bktldezdgv-5, lower-roman) ". "
         }
 
         .lst-kix_22x579xxms5k-7>li:before {
@@ -596,6 +758,9 @@ index_html = r"""
         .lst-kix_x6aktldezdgv-6>li {
             counter-increment: lst-ctn-kix_x6aktldezdgv-6
         }
+        .lst-kix_x7bktldezdgv-6>li {
+            counter-increment: lst-ctn-kix_x7bktldezdgv-6
+        }
 
         ul.lst-kix_cmtnlngtu4bi-8 {
             list-style-type: none
@@ -607,6 +772,9 @@ index_html = r"""
 
         ol.lst-kix_x6aktldezdgv-8.start {
             counter-reset: lst-ctn-kix_x6aktldezdgv-8 0
+        }
+        ol.lst-kix_x7bktldezdgv-8.start {
+            counter-reset: lst-ctn-kix_x7bktldezdgv-8 0
         }
 
         .lst-kix_fe9brg7u0cec-1>li {
@@ -632,6 +800,9 @@ index_html = r"""
         .lst-kix_x6aktldezdgv-4>li {
             counter-increment: lst-ctn-kix_x6aktldezdgv-4
         }
+        .lst-kix_x7bktldezdgv-4>li {
+            counter-increment: lst-ctn-kix_x7bktldezdgv-4
+        }
 
         .lst-kix_geynw9iyvxg3-4>li:before {
             content: "\0025cb   "
@@ -647,6 +818,9 @@ index_html = r"""
 
         ol.lst-kix_x6aktldezdgv-2.start {
             counter-reset: lst-ctn-kix_x6aktldezdgv-2 0
+        }
+        ol.lst-kix_x7bktldezdgv-2.start {
+            counter-reset: lst-ctn-kix_x7bktldezdgv-2 0
         }
 
         li.li-bullet-0:before {
@@ -1067,7 +1241,7 @@ index_html = r"""
             LLMs.</span></p>
     <p class="c2"><span>There are two available types of interaction: </span><span class="c6">Revision
         </span><span>(grammar or stylistic fixes, reformulation) and </span><span class="c6">continuation </span><span
-            class="c1">(text generation like essay wrap-up generation). To send a revision query, type some text and
+            class="c1">(text generation like essay wrap up generation). To send a revision query, type some text and
             select the part that you want to be revised. You can then click on the &ldquo;Enter your query&rdquo; field
             and enter your query. If you don&rsquo;t type anything, the model will be asked to fix the grammar.</span>
     </p>
@@ -1096,49 +1270,171 @@ index_html = r"""
                 title=""></span></p>
     <p class="c2"><span class="c1">You may experiment with the system for max. 5 minutes. When the time is over, you
             will get a pop-up notification that you should start working on other tasks. Click on the Done button in the top-left corner and return to the document overview.</span></p>
-    <p class="c2"><span class="c16 c6 c8">Part 2: LLM-powered writing</span></p>
-    <p class="c2"><span class="c5">Task 1: Argumentative writing</span></p>
+    <p class="c2"><span class="c16 c6 c8">Part 2: LLM-powered writing</span></p>"""
+
+
+def get_conclusion():
+    return r"""<p class="c2"><span class="c6 c8">Part 3: User Experience Survey</span></p>
+    <p class="c2"><span>After you finished all interactions, please fill out</span><span
+            class="c6 c8">&nbsp;</span><span class="c4"><a class="c3"
+                href="https://umfragen.tu-darmstadt.de/831371?lang=en" target="_blank">user
+                experience survey</a></span><span class="c1">. There, we ask about possible problems, limitations, and
+            overall satisfaction. This helps us to understand how we can improve our software. </span></p>
+    <p class="c2"><span class="c1">Thank you for your participation!</span></p>
+    <p class="c0 c13"><span class="c1"></span></p>
+</body>
+
+</html>
+
+<script>
+    const topics = {
+"""
+
+def get_js_functions():
+    return r"""
+    }
+    const urlParams = new URLSearchParams(window.location.search);
+    const userId = urlParams.get("id");
+    if (userId && topics[userId]) {
+        const argumentative = document.getElementById("argumentative");
+        const creative = document.getElementById("creative");
+        const human = document.getElementById("human");
+        argumentative.innerHTML = `<li class="c2 c11 li-bullet-0"><span class="c1">${topics[userId].argumentative[0]}</span></li>
+        <li class="c2 c11 li-bullet-0"><span class="c1">${topics[userId].argumentative[1]}</span></li>`
+        creative.innerHTML = `<li class="c2 c11 li-bullet-0"><span class="c1">${topics[userId].creative[0]}</span></li>
+        <li class="c2 c11 li-bullet-0"><span class="c1">${topics[userId].creative[1]}</span></li>`
+        human.innerHTML = `<li class="c2 c11 li-bullet-0"><span class="c1">${topics[userId].human[0]}</span></li>
+        <li class="c2 c11 li-bullet-0"><span class="c1">${topics[userId].human[1]}</span></li>`
+
+        const humanOnlyTask = topics[userId].humanOnly;
+        document.getElementById(humanOnlyTask).style.display = "block";
+    } else {
+        const start = document.getElementById("start");
+        start.innerHTML = `<p class="c0"><span class="c1">Invalid user ID. Please check your URL:</span></p>`;
+    }
+
+</script>
+
+<style>
+form>* {
+  margin: 10px;
+}
+</style>
+"""
+
+
+def get_argumentative_text(use_llm):
+    if not use_llm:
+        header = """<p class="c2"><span class="c5">Task 1: Argumentative writing</span></p>
     <p class="c2"><span>In this part, you have 10 minutes to write an argumentative essay. You </span><span
             class="c10 c6">HAVE TO</span><span class="c1">&nbsp;interact with the LLM during your writing process.
         </span></p>
     <p class="c2"><span>Enter the Document named &ldquo;Task 1: Argumentative Writing&rdquo;. Select </span><span
             class="c6">one </span><span class="c1">of two following topics:</span></p>
-    <ol class="c17 lst-kix_x6aktldezdgv-0 start" start="1" id="argumentative">
+    """
+        task = "argumentative"
+        class_list = "kix_x6aktldezdgv"
+        wrap_up_words = """<p class="c2"><span class="c1">After 10 minutes are over, you get a notification that you should wrap up your work and move on to the next part. Click on the Done button in the top-left corner and return to the document overview.</span></p>
+    <p class="c2"><span class="c10 c6">Now you may take a 5 minute break before moving on to the next task!</span></p>
+"""
+        end = ""
+    else:
+        header = """<div id="humanArgumentative" style="display: none;"><p class="c2"><span class="c5">Task 4: Argumentative writing Human-Only</span></p>
+    <p class="c2"><span>In this part, you have 10 minutes to write an argumentative essay. You have to write this text
+        on your own, without using LLMs.
+        </span></p>
+    <p class="c2"><span>Enter the Document named &ldquo;Task 4: Argumentative Writing Human-Only&rdquo;. Select </span><span
+            class="c6">one </span><span class="c1">of two following topics:</span></p>
+    """
+        task = "human"
+        class_list = "kix_x7bktldezdgv"
+        wrap_up_words = """<p class="c2"><span class="c1">After 10 minutes are over, you get a notification that you should wrap up your work and move on to the survey. 
+            Click on the Done button in the top-left corner and return to the document overview. You may close the program now.</span></p>
+"""
+        end = "</div>"
+
+    return header + f"""
+    <ol class="c17 lst-{class_list}-0 start" start="1" id="{task}">
     </ol>
     <p class="c2"><span>Both topics contain several questions. Try to answer them all, or even come up with your own
             related questions. Your text </span><span class="c10 c6">has to</span><span class="c1">&nbsp;have clear
             structure and conclusion. Try to find strong arguments to defend your position on the topic, as well as to
             counter it with opposite arguments. Approximate expected length is 300-400 words, but it may vary.</span>
-    </p>
-    <p class="c2"><span class="c1">After 10 minutes are over, you get a notification that you should wrap-up your work. Click on the Done button in the top-left corner and return to the document overview.</span></p>
-    <p class="c2"><span class="c10 c6">Now you may take a 5 minute break before moving on to the next task!</span></p>
+    </p>""" + wrap_up_words + end
 
-    <p class="c2"><span class="c5">Task 2: Creative writing</span></p>
-    <p class="c2"><span>In this part, you have 10 minutes to write a creative story. You </span><span
-            class="c6 c10">HAVE TO</span><span class="c1">&nbsp;interact with LLMs during the writing. </span></p>
-    <p class="c2"><span>Enter the Document named &ldquo;Task 2: Creative Writing&rdquo;. Select </span><span
-            class="c6">one </span><span class="c1">of two following topics:</span></p>
-    <ol class="c17 lst-kix_fe9brg7u0cec-0 start" start="1" id="creative">
-    </ol>
-    <p class="c2"><span class="c1">Both questions set up an imaginable scenario where one aspect of our world has
-            changed. You have complete freedom - pick the tone, character, and style that appeal to you. Here are some
-            ideas for inspiration:</span></p>
-    <ul class="c17 lst-kix_22x579xxms5k-0 start">
-        <li class="c2 c11 li-bullet-0"><span class="c1">Tell a story from the perspective of an inhabitant of the new
-                world - describe your typical day and how the changes affect your life, work, relationships, etc.</span>
-        </li>
-        <li class="c2 c11 li-bullet-0"><span class="c1">Write a newspaper-style text that interviews several people from
-                that world.</span></li>
-        <li class="c2 c11 li-bullet-0"><span class="c1">Provide an analytical article that analyses the societal,
-                economical, or cultural impact that such changes could have on our society.</span></li>
-    </ul>
-    <p class="c2"><span class="c1">Approximate expected length is 300-400 words, but it may vary. After 10 minutes are
-            over, you get a notification that you should wrap-up your work and move on to the next part. Click on the Done button in the top-left corner and return to the document overview.</span></p>
+def get_creative_text(use_llm):
+    if not use_llm:
+        header = """<p class="c2"><span class="c5">Task 2: Creative writing</span></p>
+        <p class="c2"><span>In this part, you have 10 minutes to write a creative story. You </span><span
+                class="c6 c10">HAVE TO</span><span class="c1">&nbsp;interact with LLMs during the writing. </span></p>
+        <p class="c2"><span>Enter the Document named &ldquo;Task 2: Creative Writing&rdquo;. Select </span><span
+                class="c6">one </span><span class="c1">of two following topics:</span></p>"""
+        task = "creative"
+        class_list = "kix_fe9brg7u0cec"
+        wrap_up_words = """<p class="c2"><span class="c1">After 10 minutes are over, you get a notification that you should wrap up your work and move on to the next part. Click on the Done button in the top-left corner and return to the document overview.</span></p>
     <p class="c2"><span class="c10 c6">Now you may take a 5 minute break before moving on to the next task!</span></p>
-    <p class="c2"><span class="c5">Task 3: Explanatory writing</span></p>
+"""
+        end = ""
+    else:
+        header = """<div id="humanCreative" style="display: none;">
+    <p class="c2"><span class="c5">Task 4: Creative writing Human-Only</span></p>
+            <p class="c2"><span>In this part, you have 10 minutes to write a creative story. You have to write this text
+        on your own, without using LLMs. </span></p>
+            <p class="c2"><span>Enter the Document named &ldquo;Task 4: Creative Writing Human-Only&rdquo;. Select </span><span
+                    class="c6">one </span><span class="c1">of two following topics:</span></p>
+    """
+        task = "human"
+        class_list = "kix_x7bktldezdgv"
+        wrap_up_words = """<p class="c2"><span class="c1">After 10 minutes are over, you get a notification that you should wrap up your work and move on to the survey. 
+            Click on the Done button in the top-left corner and return to the document overview. You may close the program now.</span></p>
+"""
+        end = "</div>"
+    return header + f"""
+        <ol class="c17 lst-{class_list}-0 start" start="1" id="{task}">
+        </ol>
+        <p class="c2"><span class="c1">Both questions set up an imaginable scenario where one aspect of our world has
+                changed. You have complete freedom - pick the tone, character, and style that appeal to you. Here are some
+                ideas for inspiration:</span></p>
+        <ul class="c17 lst-kix_22x579xxms5k-0 start">
+            <li class="c2 c11 li-bullet-0"><span class="c1">Tell a story from the perspective of an inhabitant of the new
+                    world - describe your typical day and how the changes affect your life, work, relationships, etc.</span>
+            </li>
+            <li class="c2 c11 li-bullet-0"><span class="c1">Write a newspaper-style text that interviews several people from
+                    that world.</span></li>
+            <li class="c2 c11 li-bullet-0"><span class="c1">Provide an analytical article that analyses the societal,
+                    economical, or cultural impact that such changes could have on our society.</span></li>
+        </ul>
+    """ + wrap_up_words + end
+
+def get_explanatory_text(use_llm: bool) -> str:
+    """
+    Returns instructions for explanatory text depending on whether LLM should be used
+    """
+    if not use_llm:
+        header = """
+<p class="c2"><span class="c5">Task 3: Explanatory writing</span></p>
     <p class="c2"><span>In this part, you have 10 minutes to write an explanatory text. You </span><span
             class="c10 c6">HAVE TO</span><span class="c1">&nbsp;interact with LLMs during the writing. </span></p>
-    <p class="c2"><span class="c1">Enter the Document named &ldquo;Task 3: Explanatory Writing&rdquo;.</span></p>
+<p class="c2"><span class="c1">Enter the Document named &ldquo;Task 3: Explanatory Writing&rdquo;.</span></p>
+"""
+        wrap_up_words = """ <p class="c2"><span class="c1">Approximate expected length is 250-400 words, but it may vary. After 10 minutes are
+            over, you get a notification that you should wrap up your work and move on to the next part. 
+            Click on the Done button in the top-left corner and return to the document overview.</span></p>
+            <p class="c2"><span class="c10 c6">Now you may take a 5 minute break before moving on to the next task!</span></p>
+            """
+        end = ""
+    else:
+        header = """<div id="humanExplanatory" style="display: none;">
+<p class="c2"><span class="c5">Task :4 Explanatory writing Human-Only</span></p>
+    <p class="c2"><span>In this part, you have 10 minutes to write an explanatory text. You have to write this text
+    on your own, without using LLMs. </span></p>
+<p class="c2"><span class="c1">Enter the Document named &ldquo;Task 4: Explanatory Writing Human-Only&rdquo;.</span></p>
+"""
+        wrap_up_words = """ <p class="c2"><span class="c1">Approximate expected length is 250-400 words, but it may vary. After 10 minutes are
+            over, you get a notification that you should wrap up your work and move on to the survey. 
+            Click on the Done button in the top-left corner and return to the document overview. You may close the program now.</span></p>"""
+        end = "</div>"
+    return header + """
     <p class="c0"><span>Explain a concept or a phenomenon that you recently learned and found exciting. Maybe you
             watched a video about a certain historical period, read a paper with interesting approaches, or learned a
             new theory at your university. Explain it for </span><span class="c6">general audience</span><span
@@ -1159,48 +1455,18 @@ index_html = r"""
     <p class="c0"><span class="c1">Your text should give a clear explanation on the concept/person/time
             period/technology etc, so that people without deep knowledge can get a good understanding from your
             text.</span></p>
-    <p class="c2"><span class="c1">Approximate expected length is 250-400 words, but it may vary. After 10 minutes are
-            over, you get a notification that you should wrap-up your work and move on to the survey. 
-            Click on the Done button in the top-left corner and return to the document overview. You may close the program now.</span></p>
-    <p class="c2"><span class="c6 c8">Part 3: User Experience Survey</span></p>
-    <p class="c2"><span>After you finished all interactions, please fill out</span><span
-            class="c6 c8">&nbsp;</span><span class="c4"><a class="c3"
-                href="https://umfragen.tu-darmstadt.de/831371?lang=en" target="_blank">user
-                experience survey</a></span><span class="c1">. There, we ask about possible problems, limitations, and
-            overall satisfaction. This helps us to understand how we can improve our software. </span></p>
-    <p class="c2"><span class="c1">Thank you for your participation!</span></p>
-    <p class="c0 c13"><span class="c1"></span></p>
-</body>
+""" + wrap_up_words + end
 
-</html>
+def main():
+    users = create_users(n=N_USERS, n_tasks=N_TASKS)
+    save_as_csv(users, "users/users.csv")
+    index_html = get_start_html()
+    index_html += get_argumentative_text(use_llm=False) + get_creative_text(use_llm=False) + get_explanatory_text(use_llm=False)
+    index_html += get_argumentative_text(use_llm=True) + get_argumentative_text(use_llm=True) + get_explanatory_text(use_llm=True)
+    index_html += get_conclusion() + get_user_html(users=users) + get_js_functions()
 
-<script>
-    const topics = {
-"""
+    with open("index.html", "w") as f:
+        f.write(index_html)
 
-index_html += user_html + """
-    }
-    const urlParams = new URLSearchParams(window.location.search);
-    const userId = urlParams.get("id");
-    if (userId && topics[userId]) {
-        const argumentative = document.getElementById("argumentative");
-        const creative = document.getElementById("creative");
-        argumentative.innerHTML = `<li class="c2 c11 li-bullet-0"><span class="c1">${topics[userId].argumentative[0]}</span></li>
-        <li class="c2 c11 li-bullet-0"><span class="c1">${topics[userId].argumentative[1]}</span></li>`
-        creative.innerHTML = `<li class="c2 c11 li-bullet-0"><span class="c1">${topics[userId].creative[0]}</span></li>
-        <li class="c2 c11 li-bullet-0"><span class="c1">${topics[userId].creative[1]}</span></li>`
-    } else {
-        const start = document.getElementById("start");
-        start.innerHTML = `<p class="c0"><span class="c1">Invalid user ID. Please check your URL:</span></p>`;
-    }
-</script>
-
-<style>
-form>* {
-  margin: 10px;
-}
-</style>
-"""
-
-with open("index.html", "w") as f:
-    f.write(index_html)
+if __name__ == "__main__":
+    main()
