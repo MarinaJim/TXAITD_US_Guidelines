@@ -1359,7 +1359,7 @@ def get_argumentative_text(use_llm):
     <p class="c2"><span>Both topics contain several questions. Try to answer them all, or even come up with your own
             related questions. Your text </span><span class="c10 c6">has to</span><span class="c1">&nbsp;have clear
             structure and conclusion. Try to find strong arguments to defend your position on the topic, as well as to
-            counter it with opposite arguments. Approximate expected length is 300-400 words, but it may vary.</span>
+            counter it with opposite arguments. Approximate expected length is 350-450 words, but it may vary.</span>
     </p>""" + wrap_up_words + end
 
 def get_creative_text(use_llm):
@@ -1417,7 +1417,7 @@ def get_explanatory_text(use_llm: bool) -> str:
             class="c10 c6">HAVE TO</span><span class="c1">&nbsp;interact with LLMs during the writing. </span></p>
 <p class="c2"><span class="c1">Enter the Document named &ldquo;Task 3: Explanatory Writing&rdquo;.</span></p>
 """
-        wrap_up_words = """ <p class="c2"><span class="c1">Approximate expected length is 250-400 words, but it may vary. After 10 minutes are
+        wrap_up_words = """ <p class="c2"><span class="c1">Approximate expected length is 350-450 words, but it may vary. After 10 minutes are
             over, you get a notification that you should wrap up your work and move on to the next part. 
             Click on the Done button in the top-left corner and return to the document overview.</span></p>
             <p class="c2"><span class="c10 c6">Now you may take a 5 minute break before moving on to the next task!</span></p>
@@ -1430,7 +1430,7 @@ def get_explanatory_text(use_llm: bool) -> str:
     on your own, without using LLMs. </span></p>
 <p class="c2"><span class="c1">Enter the Document named &ldquo;Task 4: Explanatory Writing Human-Only&rdquo;.</span></p>
 """
-        wrap_up_words = """ <p class="c2"><span class="c1">Approximate expected length is 250-400 words, but it may vary. After 10 minutes are
+        wrap_up_words = """ <p class="c2"><span class="c1">Approximate expected length is 350-450 words, but it may vary. After 10 minutes are
             over, you get a notification that you should wrap up your work and move on to the survey. 
             Click on the Done button in the top-left corner and return to the document overview. You may close the program now.</span></p>"""
         end = "</div>"
