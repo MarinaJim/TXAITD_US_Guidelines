@@ -2,7 +2,7 @@ from create_users import create_users, save_as_csv, randomize
 import json
 
 N_TASKS = 4
-N_USERS = 3
+N_USERS = 7
 N_EXAMPLES = 2
 
 ARGUMENTATIVE = [
@@ -1281,7 +1281,8 @@ def get_start_html():
                 style="width: 1000px; height: auto; margin-left: 0.00px; margin-top: 0.00px; transform: rotate(0.00rad) translateZ(0px); -webkit-transform: rotate(0.00rad) translateZ(0px);"
                 title=""></span></p>
     <p class="c2"><span class="c1">You may experiment with the system for max. 5 minutes. When the time is over, you
-            will get a pop-up notification that you should start working on other tasks. Click on the Done button in the top-left corner and return to the document overview.</span></p>
+            will get a pop-up notification that you should start working on other tasks. Click on the Done button in the top-left corner and return to the document overview.
+            On returning, you will see a pop-up window prompting you to specify to what extent you feel your text belongs to you vs. to AI.</span></p>
     <p class="c2"><span class="c16 c6 c8">Part 2: LLM-powered writing</span></p>"""
 
 
@@ -1346,7 +1347,8 @@ def get_argumentative_text(use_llm):
     """
         task = "argumentative"
         class_list = "kix_x6aktldezdgv"
-        wrap_up_words = """<p class="c2"><span class="c1">After 10 minutes are over, you get a notification that you should wrap up your work and move on to the next part. Click on the Done button in the top-left corner and return to the document overview.</span></p>
+        wrap_up_words = """<p class="c2"><span class="c1">After 10 minutes are over, you get a notification that you should wrap up your work and move on to the next part. Click on the Done button in the top-left corner and return to the document overview.
+        On returning, you will see a pop-up window prompting you to specify to what extent you feel your text belongs to you vs. to AI.</span></p>
     <p class="c2"><span class="c10 c6">Now you may take a 5 minute break before moving on to the next task!</span></p>
 """
         end = ""
@@ -1383,7 +1385,8 @@ def get_creative_text(use_llm):
                 class="c6">one </span><span class="c1">of two following topics:</span></p>"""
         task = "creative"
         class_list = "kix_fe9brg7u0cec"
-        wrap_up_words = """<p class="c2"><span class="c1">After 10 minutes are over, you get a notification that you should wrap up your work and move on to the next part. Click on the Done button in the top-left corner and return to the document overview.</span></p>
+        wrap_up_words = """<p class="c2"><span class="c1">After 10 minutes are over, you get a notification that you should wrap up your work and move on to the next part. Click on the Done button in the top-left corner and return to the document overview.
+        On returning, you will see a pop-up window prompting you to specify to what extent you feel your text belongs to you vs. to AI.</span></p>
     <p class="c2"><span class="c10 c6">Now you may take a 5 minute break before moving on to the next task!</span></p>
 """
         end = ""
@@ -1431,7 +1434,8 @@ def get_explanatory_text(use_llm: bool) -> str:
 """
         wrap_up_words = """ <p class="c2"><span class="c1">Approximate expected length is 350-450 words, but it may vary. After 10 minutes are
             over, you get a notification that you should wrap up your work and move on to the next part. 
-            Click on the Done button in the top-left corner and return to the document overview.</span></p>
+            Click on the Done button in the top-left corner and return to the document overview.
+            On returning, you will see a pop-up window prompting you to specify to what extent you feel your text belongs to you vs. to AI.</span></p>
             <p class="c2"><span class="c10 c6">Now you may take a 5 minute break before moving on to the next task!</span></p>
             """
         end = ""
