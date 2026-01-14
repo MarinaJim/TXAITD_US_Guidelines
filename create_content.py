@@ -1348,7 +1348,9 @@ def get_js_functions():
     if (userId && topics[userId]) {
         const argumentative = document.getElementById("argumentative");
         const creative = document.getElementById("creative");
-        const human = document.getElementById("human");
+        const humanId = topics[userId].humanOnly === 'humanCreative' ? 'human-creative-list' : 'human-argumentative-list';
+        const human = document.getElementById(humanId);
+
         argumentative.innerHTML = `<li class="c2 c11 li-bullet-0"><span class="c1">${topics[userId].argumentative[0]}</span></li>
         <li class="c2 c11 li-bullet-0"><span class="c1">${topics[userId].argumentative[1]}</span></li>`
         creative.innerHTML = `<li class="c2 c11 li-bullet-0"><span class="c1">${topics[userId].creative[0]}</span></li>
@@ -1418,7 +1420,7 @@ def get_argumentative_text(use_llm):
     <p class="c2"><span>Select </span><span
             class="c6">one </span><span class="c1">of two following topics:</span></p>
     """
-        task = "human"
+        task = "human-argumentative-list"
         class_list = "kix_x7bktldezdgv"
         wrap_up_words = """<p class="c2"><span class="c1">After 10 minutes are over, you get a notification that you should wrap up your work and move on to the next task. 
             Click on the Done button in the top-left corner and return to the document overview.</span></p></div>
@@ -1457,7 +1459,7 @@ def get_creative_text(use_llm):
             <p class="c2"><span>Select </span><span
                     class="c6">one </span><span class="c1">of two following topics:</span></p>
     """
-        task = "human"
+        task = "human-creative-list"
         class_list = "kix_x7bktldezdgv"
         wrap_up_words = """<p class="c2"><span class="c1">After 10 minutes are over, you get a notification that you should wrap up your work and move on to the next task. 
             Click on the Done button in the top-left corner and return to the document overview.</span></p>
