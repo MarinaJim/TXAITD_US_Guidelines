@@ -9,9 +9,10 @@ import pandas as pd
 
 SYMBOLS = list(range(20))
 SYMBOLS.extend(["?", "!", ".", ","])
+TASKS = ["Argumentative Writing", "Creative Writing", "Explanatory Writing"]
 
-LLMS = ['deepseek-chat', 'gpt-5.2', 'gemini-3-flash-preview', 'qwen2.5:7b', 'llama3.2:latest']
-TEMPERATURES = [1, 1.6]
+LLMS = ['deepseek-chat', 'gpt-5.2', 'gemini-3-flash-preview', 'qwen2.5:7b', 'llama4:scout']
+TEMPERATURES = [0, 1]
 
 def randomize(arr: list[str]) -> list[str]:
     """
@@ -36,13 +37,19 @@ def assign_llms_to_tasks(sorted_llms: list[str], sorted_temperatures: list[float
     :type n_tasks: int
     """
     task_llm_assignment = {}
+    randomized_tasks = randomize(TASKS)
     for i in range(n_tasks):
         if not sorted_llms:
             sorted_llms.extend(randomize(LLMS))
         if not sorted_temperatures:
             sorted_temperatures.extend(randomize(TEMPERATURES))
-    
-        task_llm_assignment[i] = {"model": sorted_llms.pop(), "temperature": sorted_temperatures.pop()}
+        if i > 0:
+            task_llm_assignment[i] = {"model": sorted_llms.pop(),
+                                      "temperature": sorted_temperatures.pop(),
+                                      "task": randomized_tasks.pop()}
+        else:
+            task_llm_assignment[i] = {"model": sorted_llms.pop(), "temperature": sorted_temperatures.pop()}
+
     return task_llm_assignment
 
 def create_users(n: int, n_tasks: int = 4):
