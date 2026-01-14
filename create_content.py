@@ -1329,7 +1329,7 @@ def get_conclusion():
     <p class="c2"><span class="c1">Thank you for your participation!</span></p>
     <p class="c0 c13"><span class="c1"></span></p>
 </body>
-<script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
+<script type="text/javascript" src="https://code.jquery.com/jquery-latest.min.js"></script>
 
 </html>
 
