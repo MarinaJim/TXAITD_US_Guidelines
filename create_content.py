@@ -2,7 +2,7 @@ from create_users import create_users, save_as_csv, randomize
 import json
 
 N_TASKS = 4
-N_USERS = 7
+N_USERS = 10
 N_EXAMPLES = 2
 
 ARGUMENTATIVE = [
@@ -75,15 +75,17 @@ def get_user_question_mapping(users):
         human_for_user = []
 
         match human_only_task:
-            case 1:
+            case "Argumentative Writing":
                 human_for_user = get_human_only_tasks(argumentative_for_user, ARGUMENTATIVE)
                 human_only_name = "humanArgumentative"
-            case 2:
+            case "Creative Writing":
                 human_for_user = get_human_only_tasks(creative_for_user, CREATIVE)
                 human_only_name = "humanCreative"
-            case _:
+            case "Explanatory Writing":
                 human_for_user = ["", ""]
                 human_only_name = "humanExplanatory"
+            case _:
+                raise Exception("Error!")
             
         username = user["userName"]
         to_save.append({"name": username, "modelTaskMapping": model_task_mapping,
@@ -91,34 +93,57 @@ def get_user_question_mapping(users):
                         "human": human_for_user, "humanOnlyName": human_only_name})
     return to_save
 
-def get_user_html(user_mapping):
-    user_html = ""
+def get_topic_mapping_html(user_mapping):
+    topics_html = "const topics = {\n"
     for mapping in user_mapping:
         username = mapping["name"]
-        user_html += f"""
-    \"{username}\": {{
-        \"humanOnly\": `{mapping["humanOnlyName"]}`,
-        \"argumentative\":
-        [
-        `{mapping["argumentative"][0]}`,
-        `{mapping["argumentative"][1]}`
-        ],
+        topics_html += f"""
+        \"{username}\": {{
+            \"humanOnly\": `{mapping["humanOnlyName"]}`,
+            \"argumentative\":
+            [
+            `{mapping["argumentative"][0]}`,
+            `{mapping["argumentative"][1]}`
+            ],
 
-        \"creative\":
-        [
-        `{mapping["creative"][0]}`,
-        `{mapping["creative"][1]}`
-        ],
+            \"creative\":
+            [
+            `{mapping["creative"][0]}`,
+            `{mapping["creative"][1]}`
+            ],
 
-        \"human\":
-        [
-        `{mapping["human"][0]}`,
-        `{mapping["human"][1]}`
-        ],
-        }},
-    """
-    return user_html
+            \"human\":
+            [
+            `{mapping["human"][0]}`,
+            `{mapping["human"][1]}`
+            ],
+            }},
+        """
+    topics_html += "}\n"
 
+    return topics_html
+
+
+
+def get_order_mapping_html(user_mapping):
+    order_html = "const order = {\n"
+    for mapping in user_mapping:
+        username = mapping["name"]
+
+        ordered_keys = []
+        for i in sorted(mapping["modelTaskMapping"]["LLM"]):
+            task = mapping["modelTaskMapping"]["LLM"][i]["task"]
+            if "Argumentative" in task:
+                ordered_keys.append("argumentativeDiv")
+            elif "Creative" in task:
+                ordered_keys.append("creativeDiv")
+            elif "Explanatory" in task:
+                ordered_keys.append("explanatoryDiv")
+
+        order_html += f""" "{username}": {ordered_keys},\n"""
+    order_html += "}"
+
+    return  order_html
 
 def get_start_html():
     return r"""
@@ -1239,17 +1264,13 @@ def get_start_html():
                 style="width: 1000px; height: auto; margin-left: 0.00px; margin-top: 0.00px; transform: rotate(0.00rad) translateZ(0px); -webkit-transform: rotate(0.00rad) translateZ(0px);"
                 title=""></span></p>
     <p class="c2 c13"><span class="c1"></span></p>
-    <p class="c2"><span class="c5">Task 0: Warm-up</span></p>
-    <p class="c2"><span class="c1">This task&rsquo;s goal is for you to get familiar with the system. You will edit an
-            example document with the help of LLMs..</span></p>
-    <p class="c2"><span>In the Documents overview, you will see four documents for the warm-up and three tasks. The
-            first document is </span><span class="c14">Task 0: Warm-up</span><span class="c1">. Click on &ldquo;Access
-            document&rdquo; to open it.</span></p>
-    <p class="c2"><span
-            style="overflow: hidden; display: inline-block; margin: 0.00px 0.00px; border: 0.00px solid #000000; transform: rotate(0.00rad) translateZ(0px); -webkit-transform: rotate(0.00rad) translateZ(0px); width: 1200px; height: auto;"><img
-                alt="" src="images/image5.png"
-                style="width: 1000px; height: auto; margin-left: 0.00px; margin-top: 0.00px; transform: rotate(0.00rad) translateZ(0px); -webkit-transform: rotate(0.00rad) translateZ(0px);"
-                title=""></span></p>
+    """
+
+def get_warmup_html():
+    return """<p class="c2"><span class="c5">Task 2.0: Warm-up</span></p>
+    <p class="c2"><span class="c1">This task&rsquo;s goal is for you to get familiar with the LLM capabilities of CARE. You will edit an
+            example document with the help of LLMs.</span></p>
+    <p class="c2"><span>Open the document </span><span class="c14">Task 2.0: Warm-up</span><span class="c1"> to start editing.</span></p>
     <p class="c2"><span class="c1">You are now in the document editor where you can type your text and interact with
             LLMs.</span></p>
     <p class="c2"><span>There are two available types of interaction: </span><span class="c6">Revision
@@ -1296,7 +1317,9 @@ def get_start_html():
 
 
 def get_conclusion():
-    return r"""<p class="c2"><span class="c6 c8">Part 3: User Experience Survey</span></p>
+    return r"""
+    <p class="c2"><span class="c10 c6">Now you may close the program and move on to the survey!</span></p>
+    <p class="c2"><span class="c6 c8">Part 3: User Experience Survey</span></p>
     <p class="c2"><span>After you finished all interactions, please fill out</span><span
             class="c6 c8">&nbsp;</span><span class="c4"><a class="c3"
                 href="https://umfragen.tu-darmstadt.de/831371?lang=en" target="_blank">user
@@ -1305,17 +1328,21 @@ def get_conclusion():
     <p class="c2"><span class="c1">Thank you for your participation!</span></p>
     <p class="c0 c13"><span class="c1"></span></p>
 </body>
+<script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
 
 </html>
 
 <script>
-    const topics = {
 """
 
 def get_js_functions():
-    return r"""
-    }
-    const urlParams = new URLSearchParams(window.location.search);
+    code = """
+    function reorderWithInsertAfter(orderArr) {
+        for (let i = 1; i < orderArr.length; i++) {
+            $("#" + orderArr[i]).insertAfter("#" + orderArr[i - 1]);
+        }
+    }"""
+    code += r"""const urlParams = new URLSearchParams(window.location.search);
     const userId = urlParams.get("id");
     if (userId && topics[userId]) {
         const argumentative = document.getElementById("argumentative");
@@ -1327,6 +1354,25 @@ def get_js_functions():
         <li class="c2 c11 li-bullet-0"><span class="c1">${topics[userId].creative[1]}</span></li>`
         human.innerHTML = `<li class="c2 c11 li-bullet-0"><span class="c1">${topics[userId].human[0]}</span></li>
         <li class="c2 c11 li-bullet-0"><span class="c1">${topics[userId].human[1]}</span></li>`
+        reorderWithInsertAfter(order[userId]);
+
+        const argumentativeOrder = order[userId].indexOf("argumentativeDiv") + 1;
+        document.querySelectorAll("#argumentativeOrder").forEach(el => {
+            el.textContent = argumentativeOrder;
+        });
+
+        const creativeOrder = order[userId].indexOf("creativeDiv") + 1;
+        document.querySelectorAll("#creativeOrder").forEach(el => {
+            el.textContent = creativeOrder;
+        });
+
+        const explanatoryOrder = order[userId].indexOf("explanatoryDiv") + 1;
+        document.querySelectorAll("#explanatoryOrder").forEach(el => {
+            el.textContent = explanatoryOrder;
+        });
+        
+        const lastTask = order[userId][order[userId].length - 1] + "closingWords";
+        document.getElementById(lastTask).textContent = "";
 
         const humanOnlyTask = topics[userId].humanOnly;
         document.getElementById(humanOnlyTask).style.display = "block";
@@ -1343,38 +1389,39 @@ form>* {
 }
 </style>
 """
-
+    return code
 
 def get_argumentative_text(use_llm):
     if not use_llm:
-        header = """<p class="c2"><span class="c5">Task 1: Argumentative writing</span></p>
+        header = """<div id="argumentativeDiv"><p class="c2"><span class="c5">Task 2.<span id="argumentativeOrder"></span>: Argumentative writing</span></p>
     <p class="c2"><span>In this part, you have 10 minutes to write an argumentative essay. You </span><span
             class="c10 c6">HAVE TO</span><span class="c1">&nbsp;interact with the LLM during your writing process.
         </span></p>
-    <p class="c2"><span>Enter the Document named &ldquo;Task 1: Argumentative Writing&rdquo;. Select </span><span
+    <p class="c2"><span>Enter the Document named &ldquo;Task 2.<span id="argumentativeOrder"></span>: Argumentative Writing&rdquo;. Select </span><span
             class="c6">one </span><span class="c1">of two following topics:</span></p>
     """
         task = "argumentative"
         class_list = "kix_x6aktldezdgv"
         wrap_up_words = """<p class="c2"><span class="c1">After 10 minutes are over, you get a notification that you should wrap up your work and move on to the next part. Click on the Done button in the top-left corner and return to the document overview.
         On returning, you will see a pop-up window prompting you to specify to what extent you feel your text belongs to you vs. to AI.</span></p>
-    <p class="c2"><span class="c10 c6">Now you may take a 5 minute break before moving on to the next task!</span></p>
+    <p class="c2"><span class="c10 c6" id="argumentativeDivclosingWords">Now you may take a 5 minute break before moving on to the next task!</span></p>
 """
-        end = ""
     else:
-        header = """<div id="humanArgumentative" style="display: none;"><p class="c2"><span class="c5">Task 4: Argumentative writing Human-Only</span></p>
+        header = """<div id="humanArgumentative" style="display: none;"><p class="c2"><span class="c5">Task 1: Argumentative writing Human-Only</span></p>
     <p class="c2"><span>In this part, you have 10 minutes to write an argumentative essay. You have to write this text
         on your own, without using LLMs.
         </span></p>
-    <p class="c2"><span>Enter the Document named &ldquo;Task 4: Argumentative Writing Human-Only&rdquo;. Select </span><span
+    <p class="c2"><span>In the Documents overview, you will see five documents. The
+            first document is </span><span class="c14">Task 1: Argumentative writing Human-Only</span><span class="c1">. Click on &ldquo;Access
+            document&rdquo; to open it.</span></p>
+    <p class="c2"><span>Select </span><span
             class="c6">one </span><span class="c1">of two following topics:</span></p>
     """
         task = "human"
         class_list = "kix_x7bktldezdgv"
-        wrap_up_words = """<p class="c2"><span class="c1">After 10 minutes are over, you get a notification that you should wrap up your work and move on to the survey. 
-            Click on the Done button in the top-left corner and return to the document overview. You may close the program now.</span></p>
+        wrap_up_words = """<p class="c2"><span class="c1">After 10 minutes are over, you get a notification that you should wrap up your work and move on to the next task. 
+            Click on the Done button in the top-left corner and return to the document overview.</span></p></div>
 """
-        end = "</div>"
 
     return header + f"""
     <ol class="c17 lst-{class_list}-0 start" start="1" id="{task}">
@@ -1383,36 +1430,37 @@ def get_argumentative_text(use_llm):
             related questions. Your text </span><span class="c10 c6">has to</span><span class="c1">&nbsp;have clear
             structure and conclusion. Try to find strong arguments to defend your position on the topic, as well as to
             counter it with opposite arguments. Approximate expected length is 350-450 words, but it may vary.</span>
-    </p>""" + wrap_up_words + end
+    </p>""" + wrap_up_words + "</div>"
 
 def get_creative_text(use_llm):
     if not use_llm:
-        header = """<p class="c2"><span class="c5">Task 2: Creative writing</span></p>
+        header = """<div id="creativeDiv"><p class="c2"><span class="c5">Task 2.<span id="creativeOrder"></span>: Creative writing</span></p>
         <p class="c2"><span>In this part, you have 10 minutes to write a creative story. You </span><span
                 class="c6 c10">HAVE TO</span><span class="c1">&nbsp;interact with LLMs during the writing. </span></p>
-        <p class="c2"><span>Enter the Document named &ldquo;Task 2: Creative Writing&rdquo;. Select </span><span
+        <p class="c2"><span>Enter the Document named &ldquo;Task 2.<span id="creativeOrder"></span>: Creative Writing&rdquo;. Select </span><span
                 class="c6">one </span><span class="c1">of two following topics:</span></p>"""
         task = "creative"
         class_list = "kix_fe9brg7u0cec"
         wrap_up_words = """<p class="c2"><span class="c1">After 10 minutes are over, you get a notification that you should wrap up your work and move on to the next part. Click on the Done button in the top-left corner and return to the document overview.
         On returning, you will see a pop-up window prompting you to specify to what extent you feel your text belongs to you vs. to AI.</span></p>
-    <p class="c2"><span class="c10 c6">Now you may take a 5 minute break before moving on to the next task!</span></p>
+    <p class="c2"><span class="c10 c6" id="creativeDivclosingWords">Now you may take a 5 minute break before moving on to the next task!</span></p>
 """
-        end = ""
     else:
         header = """<div id="humanCreative" style="display: none;">
-    <p class="c2"><span class="c5">Task 4: Creative writing Human-Only</span></p>
+    <p class="c2"><span class="c5">Task 1: Creative writing Human-Only</span></p>
             <p class="c2"><span>In this part, you have 10 minutes to write a creative story. You have to write this text
         on your own, without using LLMs. </span></p>
-            <p class="c2"><span>Enter the Document named &ldquo;Task 4: Creative Writing Human-Only&rdquo;. Select </span><span
+        <p class="c2"><span>In the Documents overview, you will see five documents. The
+            first document is </span><span class="c14">Task 1: Creative writing Human-Only</span><span class="c1">. Click on &ldquo;Access
+            document&rdquo; to open it.</span></p>
+            <p class="c2"><span>Select </span><span
                     class="c6">one </span><span class="c1">of two following topics:</span></p>
     """
         task = "human"
         class_list = "kix_x7bktldezdgv"
-        wrap_up_words = """<p class="c2"><span class="c1">After 10 minutes are over, you get a notification that you should wrap up your work and move on to the survey. 
-            Click on the Done button in the top-left corner and return to the document overview. You may close the program now.</span></p>
+        wrap_up_words = """<p class="c2"><span class="c1">After 10 minutes are over, you get a notification that you should wrap up your work and move on to the next task. 
+            Click on the Done button in the top-left corner and return to the document overview.</span></p>
 """
-        end = "</div>"
     return header + f"""
         <ol class="c17 lst-{class_list}-0 start" start="1" id="{task}">
         </ol>
@@ -1428,7 +1476,7 @@ def get_creative_text(use_llm):
             <li class="c2 c11 li-bullet-0"><span class="c1">Provide an analytical article that analyses the societal,
                     economical, or cultural impact that such changes could have on our society.</span></li>
         </ul>
-    """ + wrap_up_words + end
+    """ + wrap_up_words + "</div>"
 
 def get_explanatory_text(use_llm: bool) -> str:
     """
@@ -1436,29 +1484,29 @@ def get_explanatory_text(use_llm: bool) -> str:
     """
     if not use_llm:
         header = """
-<p class="c2"><span class="c5">Task 3: Explanatory writing</span></p>
+<div id="explanatoryDiv"><p class="c2"><span class="c5">Task 2.<span id="explanatoryOrder"></span>: Explanatory writing</span></p>
     <p class="c2"><span>In this part, you have 10 minutes to write an explanatory text. You </span><span
             class="c10 c6">HAVE TO</span><span class="c1">&nbsp;interact with LLMs during the writing. </span></p>
-<p class="c2"><span class="c1">Enter the Document named &ldquo;Task 3: Explanatory Writing&rdquo;.</span></p>
+<p class="c2"><span class="c1">Enter the Document named &ldquo;Task 2.<span id="explanatoryOrder"></span>: Explanatory Writing&rdquo;.</span></p>
 """
         wrap_up_words = """ <p class="c2"><span class="c1">Approximate expected length is 350-450 words, but it may vary. After 10 minutes are
             over, you get a notification that you should wrap up your work and move on to the next part. 
             Click on the Done button in the top-left corner and return to the document overview.
             On returning, you will see a pop-up window prompting you to specify to what extent you feel your text belongs to you vs. to AI.</span></p>
-            <p class="c2"><span class="c10 c6">Now you may take a 5 minute break before moving on to the next task!</span></p>
+            <p class="c2"><span class="c10 c6" id="explanatoryDivclosingWords">Now you may take a 5 minute break before moving on to the next task!</span></p>
             """
-        end = ""
     else:
         header = """<div id="humanExplanatory" style="display: none;">
-<p class="c2"><span class="c5">Task :4 Explanatory writing Human-Only</span></p>
+<p class="c2"><span class="c5">Task 1: Explanatory writing Human-Only</span></p>
     <p class="c2"><span>In this part, you have 10 minutes to write an explanatory text. You have to write this text
     on your own, without using LLMs. </span></p>
-<p class="c2"><span class="c1">Enter the Document named &ldquo;Task 4: Explanatory Writing Human-Only&rdquo;.</span></p>
+    <p class="c2"><span>In the Documents overview, you will see five documents. The
+            first document is </span><span class="c14">Task 1: Explanatory writing Human-Only</span><span class="c1">. Click on &ldquo;Access
+            document&rdquo; to open it.</span></p>
 """
         wrap_up_words = """ <p class="c2"><span class="c1">Approximate expected length is 350-450 words, but it may vary. After 10 minutes are
-            over, you get a notification that you should wrap up your work and move on to the survey. 
-            Click on the Done button in the top-left corner and return to the document overview. You may close the program now.</span></p>"""
-        end = "</div>"
+            over, you get a notification that you should wrap up your work and move on to the next task. 
+            Click on the Done button in the top-left corner and return to the document overview.</span></p>"""
     return header + """
     <p class="c0"><span>Explain a concept or a phenomenon that you recently learned and found exciting. Maybe you
             watched a video about a certain historical period, read a paper with interesting approaches, or learned a
@@ -1480,7 +1528,7 @@ def get_explanatory_text(use_llm: bool) -> str:
     <p class="c0"><span class="c1">Your text should give a clear explanation on the concept/person/time
             period/technology etc, so that people without deep knowledge can get a good understanding from your
             text.</span></p>
-""" + wrap_up_words + end
+""" + wrap_up_words + "</div>"
 
 def main():
     users = create_users(n=N_USERS, n_tasks=N_TASKS)
@@ -1489,11 +1537,11 @@ def main():
     user_mapping = get_user_question_mapping(users)
     with open("users/user_stats.json", "w") as f:
         json.dump(user_mapping, f)
-
     index_html = get_start_html()
+    index_html += get_argumentative_text(use_llm=True) + get_creative_text(use_llm=True) + get_explanatory_text(use_llm=True) + get_warmup_html()
     index_html += get_argumentative_text(use_llm=False) + get_creative_text(use_llm=False) + get_explanatory_text(use_llm=False)
-    index_html += get_argumentative_text(use_llm=True) + get_argumentative_text(use_llm=True) + get_explanatory_text(use_llm=True)
-    index_html += get_conclusion() + get_user_html(user_mapping=user_mapping) + get_js_functions()
+    index_html += get_conclusion()
+    index_html += get_topic_mapping_html(user_mapping=user_mapping) + get_order_mapping_html(user_mapping=user_mapping) + get_js_functions()
 
     with open("index.html", "w") as f:
         f.write(index_html)

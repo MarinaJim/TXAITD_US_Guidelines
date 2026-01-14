@@ -10,7 +10,7 @@ import pandas as pd
 SYMBOLS = list(range(20))
 SYMBOLS.extend(["?", "!", ".", ","])
 TASKS = ["Argumentative Writing", "Creative Writing", "Explanatory Writing"]
-
+NO_LLM_TASKS = ["Argumentative Writing", "Creative Writing", "Explanatory Writing"]
 LLMS = ['deepseek-chat', 'gpt-5.2', 'gemini-3-flash-preview', 'qwen2.5:7b', 'llama4:scout']
 TEMPERATURES = [0, 1]
 
@@ -67,6 +67,7 @@ def create_users(n: int, n_tasks: int = 4):
     usernames = random.sample(words.words(), n)
     sorted_llms = randomize(LLMS)
     sorted_temperatures = randomize(TEMPERATURES)
+    sorted_no_llms = randomize(NO_LLM_TASKS)
 
     for i, username in enumerate(usernames):
         username = username.lower()
@@ -76,7 +77,9 @@ def create_users(n: int, n_tasks: int = 4):
             password += str(secrets.choice(SYMBOLS))
         ext_id = random.randint(100, 1000)
         task_llm_assignment = assign_llms_to_tasks(sorted_llms, sorted_temperatures, n_tasks)
-        no_llm_task = 1 + (i % (n_tasks - 1))
+        if not sorted_no_llms:
+            sorted_no_llms.extend(randomize(NO_LLM_TASKS))
+        no_llm_task = sorted_no_llms.pop()
         user = {
             "extId": ext_id,
             "firstName": "user",
@@ -104,7 +107,7 @@ def save_as_csv(users: list[list], path: str) -> None:
     df.to_csv(path, index=False)
 
 def main():
-    n_users = 1
+    n_users = 3
     n_tasks = 4
     path = "users/users.csv"
     users = create_users(n_users, n_tasks)
