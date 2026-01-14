@@ -1167,7 +1167,8 @@ def get_start_html():
             class="c15">&nbsp;</span><span>To be allowed to participate, you have to have English skills of </span><span
             class="c10 c6">at least B1</span><span class="c1">.</span></p>
     <p class="c2"><span class="c6">Duration of study</span><span class="c1">: 60-80 minutes.</span></p>
-    <p class="c2"><span class="c16 c6 c8">Privacy statement</span></p>
+    <p class="c2"><span class="c16 c6 c8">Consent Form</span></p>
+    <!--
     <p class="c2"><span class="c1">All data in this study is processed according to the laws of the European General
             Data Protection Regulation (GDPR) and the Data Protection and Freedom of Information laws of the German
             state of Hesse (HDSIG). The data will only be used according to the descriptions in General
@@ -1230,6 +1231,8 @@ def get_start_html():
     <p class="c0"><span class="c1">Hochschulstra&szlig;e 10</span></p>
     <p class="c0"><span class="c1">64289 Darmstadt</span></p>
     <p class="c0 c13"><span class="c1"></span></p>
+    -->
+     <p class="c2"><span class="c6">IMPORTANT</span><span>: Before your participation starts, please read and sign </span><span class="c4"><a href="https://umfragen.tu-darmstadt.de/726191?lang=en" target="_blank">the consent form</a></span><span>!</span></p>
     <p class="c2"><span class="c16 c6 c8">Part 0: Background information survey</span></p>
     <p class="c2"><span>Before you start the main part of the study, please fill out </span><span class="c4"><a
                 class="c3"
