@@ -48,7 +48,9 @@ def assign_llms_to_tasks(sorted_llms: list[str], sorted_temperatures: list[float
                                       "temperature": sorted_temperatures.pop(),
                                       "task": randomized_tasks.pop()}
         else:
-            task_llm_assignment[i] = {"model": sorted_llms.pop(), "temperature": sorted_temperatures.pop()}
+            task_llm_assignment[i] = {"model": sorted_llms.pop(),
+                                      "temperature": sorted_temperatures.pop(),
+                                      "task": "Warm-up"}
 
     return task_llm_assignment
 
