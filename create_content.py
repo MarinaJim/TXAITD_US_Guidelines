@@ -1157,8 +1157,9 @@ def get_start_html():
     <p class="c0 c13"><span class="c6 c8 c16"></span></p>
     <p class="c0"><span>These guidelines provide the necessary information for you to participate in the user study. The
             study consists of three parts. First, you will fill out a survey on your background, including your age,
-            English level, and previous use of LLMs. Then, you will start your interaction with the system. You will
-            have a small warm-up during which you get familiar with the system. Then, you will write three texts on
+            English level, and previous use of LLMs. Then, you will start your interaction with the system. First, you will
+            write a text on your own, without using an LLM. Then, you will have a small warm-up during which you get familiar
+            with the AI capabilities of the system. Then, you will write three texts on
             different topics </span><span class="c10">using LLM assistance</span><span class="c1">&nbsp;(mandatory): one
             argumentative, one creative, and one explanatory. Lastly, you will fill out a questionnaire about your
             experience with the system.</span></p>
@@ -1180,7 +1181,7 @@ def get_start_html():
                 save information about your name and email.</span></li>
         <li class="c2 c11 li-bullet-0"><span class="c1">User Study: Usage data of the tool including all interactions
                 like button clicks, typing, content of LLM queries. We save your username, without saving the mapping to
-                your email.</span></li>
+                your personal data.</span></li>
         <li class="c2 c11 li-bullet-0"><span class="c1">User Experience Survey: all answers to questions regarding the
                 use of the software.</span></li>
     </ul>
@@ -1237,8 +1238,8 @@ def get_start_html():
             English level, and field of study. </span></p>
     <p class="c2"><span class="c16 c6 c8">Part 1: Introduction to CARE</span></p>
     <p class="c2"><span class="c1">In this part, you will first log into our software for human-AI interaction. After
-            the log-in, you will have a 5 minutes warm-up where you can test the system&rsquo;s capabilities. Then you
-            will perform three writing tasks, &nbsp;ca. 10 minutes each, with short breaks in between. If you have any questions, please do not
+            the log-in, you will write a small text on a given topic. Then, you will have a 5 minutes warm-up where you can test the system&rsquo;s AI capabilities. Then you
+            will perform three writing tasks using an LLM, &nbsp;ca. 10 minutes each, with short breaks in between. If you have any questions, please do not
             hesitate to ask for clarifications or technical assistance.</span></p>
     <p class="c2"><span class="c5">Log into CARE</span></p>
     <ul class="c17 lst-kix_geynw9iyvxg3-0 start">
