@@ -807,13 +807,22 @@ def get_explanatory_text(use_llm: bool) -> str:
     The approximate expected length is 350-450 words, but this may vary.</span></p>
 """ + wrap_up_words + "</div>"
 
+def get_stats_seminar(users):
+    user_stats = []
+    for user in users:
+        user_stats.append({"extId": user["extId"], "userName": user["userName"], "modelTaskMapping": user["modelTaskMapping"]})
+    return user_stats
+
 def main():
     users = create_users(n=N_USERS, n_tasks=N_TASKS)
     save_as_csv(users, "users/users.csv")
 
+    user_stats = get_stats_seminar(users)
+    with open("users/user_stats_ukp_seminar.json", "w") as f:
+        json.dump(user_stats, f)
+
     user_mapping = get_user_question_mapping(users)
-    with open("users/user_stats.json", "w") as f:
-        json.dump(user_mapping, f)
+
     index_html = get_start_html()
     index_html += get_argumentative_text(use_llm=True) + get_creative_text(use_llm=True) + get_explanatory_text(use_llm=True) + get_warmup_html()
     index_html += get_argumentative_text(use_llm=False) + get_creative_text(use_llm=False) + get_explanatory_text(use_llm=False)

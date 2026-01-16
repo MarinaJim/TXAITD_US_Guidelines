@@ -1,0 +1,31 @@
+[
+    {
+        "extId": 880,
+        "userName": "photosculpture",
+        "modelTaskMapping": {
+            "noLLM": "Explanatory Writing",
+            "LLM": {
+                "0": {
+                    "model": "llama4:scout",
+                    "temperature": 0,
+                    "task": "Warm-up"
+                },
+                "1": {
+                    "model": "gpt-5.2",
+                    "temperature": 1,
+                    "task": "Argumentative Writing"
+                },
+                "2": {
+                    "model": "deepseek-chat",
+                    "temperature": 0,
+                    "task": "Explanatory Writing"
+                },
+                "3": {
+                    "model": "gemini-3-flash-preview",
+                    "temperature": 1,
+                    "task": "Creative Writing"
+                }
+            }
+        }
+    }
+]
