@@ -678,7 +678,7 @@ def get_argumentative_text(use_llm):
     <p class="c2"><span class="c10 c6" id="argumentativeDivclosingWords">Now you may take a 5 minute break before moving on to the next task!</span></p>
 """
     else:
-        header = """<div id="humanArgumentative" style="display: none;"><p class="c2"><span class="c5">Task 1: Argumentative writing Human-Only</span></p>
+        header = """<div id="humanArgumentative" style="display: none;"><p class="c2"><span class="c5">Task 1: Argumentative writing Human-Only: Debating Scientific Claims</span></p>
     <p class="c2"><span>In this part, you have 10 minutes to write an argumentative essay. You have to write this text
         on your own, without using LLMs.
         </span></p>
@@ -724,7 +724,7 @@ def get_creative_text(use_llm):
 """
     else:
         header = """<div id="humanCreative" style="display: none;">
-    <p class="c2"><span class="c5">Task 1: Creative writing Human-Only</span></p>
+    <p class="c2"><span class="c5">Task 1: Creative writing Human-Only: Writing an Impact Statement</span></p>
             <p class="c2"><span>In this part, you have 10 minutes to pitch a research idea/direction and explain its potential
             impact on the world. You have to write this text on your own, without using LLMs. </span></p>
         <p class="c2"><span>In the Documents overview, you will see five documents. The
@@ -776,7 +776,7 @@ def get_explanatory_text(use_llm: bool) -> str:
             """
     else:
         header = """<div id="humanExplanatory" style="display: none;">
-<p class="c2"><span class="c5">Task 1: Explanatory writing Human-Only</span></p>
+<p class="c2"><span class="c5">Task 1: Explanatory writing Human-Only: Explaining a Research Concept</span></p>
     <p class="c2"><span>In this part, you have 10 minutes to write an explanatory text of a scientific concept/idea. You have to write this text
     on your own, without using LLMs. </span></p>
     <p class="c2"><span>In the Documents overview, you will see five documents. The
