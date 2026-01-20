@@ -2,7 +2,7 @@ from create_users import create_users, save_as_csv, randomize
 import json
 
 N_TASKS = 4
-N_USERS = 10
+N_USERS = 40
 N_EXAMPLES = 2
 
 ARGUMENTATIVE = [
