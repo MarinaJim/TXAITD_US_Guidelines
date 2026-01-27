@@ -2,7 +2,7 @@ from create_users import create_users, save_as_csv, randomize
 import json
 
 N_TASKS = 4
-N_USERS = 10
+N_USERS = 40
 N_EXAMPLES = 2
 
 ARGUMENTATIVE = [
@@ -572,7 +572,7 @@ def get_warmup_html():
                 style="width: 1000px; height: auto; margin-left: 0.00px; margin-top: 0.00px; transform: rotate(0.00rad) translateZ(0px); -webkit-transform: rotate(0.00rad) translateZ(0px);"
                 title=""></span></p>
     <p class="c2"><span>To send a continuation query, insert the cursor in the place where you want the text to be
-            continued and click </span><span class="c14">SHIFT+Q</span><span class="c1">. Type your query. If you
+            continued and click </span><span class="c14">ALT+Q</span><span class="c1">. Type your query. If you
             don&rsquo;t type anything, the model will be prompted to continue your text.</span></p>
     <p class="c2"><span
             style="overflow: hidden; display: inline-block; margin: 0.00px 0.00px; border: 0.00px solid #000000; transform: rotate(0.00rad) translateZ(0px); -webkit-transform: rotate(0.00rad) translateZ(0px); width: 1200px; height: auto;"><img
