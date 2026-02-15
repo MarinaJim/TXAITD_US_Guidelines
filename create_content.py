@@ -2,7 +2,7 @@ from create_users import create_users, save_as_csv, randomize
 import json
 
 N_TASKS = 4
-N_USERS = 40
+N_USERS = 15
 N_EXAMPLES = 2
 
 ARGUMENTATIVE = [
@@ -538,7 +538,7 @@ def get_start_html():
     <p class="c2"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span
             style="overflow: hidden; display: inline-block; margin: 0.00px 0.00px; border: 0.00px solid #000000; transform: rotate(0.00rad) translateZ(0px); -webkit-transform: rotate(0.00rad) translateZ(0px); width: 1000px; height: auto;"><img
                 alt="" src="images/image1.png"
-                style="width: 800px; height: auto; margin-left: 0.00px; margin-top: 0.00px; transform: rotate(0.00rad) translateZ(0px); -webkit-transform: rotate(0.00rad) translateZ(0px);"
+                style="width: 1000px; height: auto; margin-left: 0.00px; margin-top: 0.00px; transform: rotate(0.00rad) translateZ(0px); -webkit-transform: rotate(0.00rad) translateZ(0px);"
                 title=""></span></p>
     <ul class="c17">
         <li class="c2 c11 li-bullet-0"><span class="c1">After the login, you will be prompted to accept the terms and conditions.
@@ -562,31 +562,37 @@ def get_warmup_html():
             LLMs.</span></p>
     <p class="c2"><span>There are two available types of interaction: </span><span class="c6">Revision
         </span><span>(grammar or stylistic fixes, reformulation) and </span><span class="c6">continuation </span><span
-            class="c1">(text generation like essay wrap up generation). To send a revision query, type some text and
-            select the part that you want to be revised. You can then click on the &ldquo;Enter your query&rdquo; field
-            and enter your query. If you don&rsquo;t type anything, the model will be asked to fix the grammar.</span>
+            class="c1">(text generation like essay wrap up generation). You can send queries in two ways:</span>
     </p>
-    <p class="c2"><span
+    <ol class="c17 start">
+            <li class="c2 c11"><span class="c1">With the shortcut <span class="c6">CTRL+Q</span>. To send a revision query, select a part of text to be revised
+            and press the shortcut. A query field will appear where you can type in your custom query. If you don't type anything, the model is 
+            prompted to fix the grammar.</span>
+            <span
             style="overflow: hidden; display: inline-block; margin: 0.00px 0.00px; border: 0.00px solid #000000; transform: rotate(0.00rad) translateZ(0px); -webkit-transform: rotate(0.00rad) translateZ(0px); width: 1200px; height: auto;"><img
-                alt="" src="images/image3.png"
+                alt="" src="images/revision.png"
                 style="width: 1000px; height: auto; margin-left: 0.00px; margin-top: 0.00px; transform: rotate(0.00rad) translateZ(0px); -webkit-transform: rotate(0.00rad) translateZ(0px);"
-                title=""></span></p>
-    <p class="c2"><span>To send a continuation query, insert the cursor in the place where you want the text to be
-            continued and click </span><span class="c14">ALT+Q</span><span class="c1">. Type your query. If you
-            don&rsquo;t type anything, the model will be prompted to continue your text.</span></p>
-    <p class="c2"><span
+                title=""></span>
+            <span>To send a continuation query, place your cursor in the position to continue the text from, and press the same shortcut.
+            A query field will appear where you can type in your custom query. If you don't type anything, the model is 
+            prompted to continue your text.</span>
+            <span
             style="overflow: hidden; display: inline-block; margin: 0.00px 0.00px; border: 0.00px solid #000000; transform: rotate(0.00rad) translateZ(0px); -webkit-transform: rotate(0.00rad) translateZ(0px); width: 1200px; height: auto;"><img
-                alt="" src="images/image2.png"
+                alt="" src="images/continuation.png"
                 style="width: 1000px; height: auto; margin-left: 0.00px; margin-top: 0.00px; transform: rotate(0.00rad) translateZ(0px); -webkit-transform: rotate(0.00rad) translateZ(0px);"
-                title=""></span></p>
-    <p class="c2"><span>You can also send a default query by using buttons, as shown in the picture below.
-    To expand the list of available default queries, hover over the magic button in the bottom-right corner.
-    The list includes polishing, increasing the confidence, and continuing the text.</span></p>
-    <p class="c2"><span
+                title=""></span>
+            </li>
+            <li class="c2 c11"><span class="c1">Use <span class="c6">buttons</span> in the bottom-right corner. Select the text you want to revise, or
+            place your cursor in the continuation place. Hover over the buttons to expand the menu. You can use pre-implemented queries or select
+            "Custom query" and enter your own prompt.</span>
+            <span
             style="overflow: hidden; display: inline-block; margin: 0.00px 0.00px; border: 0.00px solid #000000; transform: rotate(0.00rad) translateZ(0px); -webkit-transform: rotate(0.00rad) translateZ(0px); width: 1200px; height: auto;"><img
                 alt="" src="images/hovering.png"
                 style="width: 1000px; height: auto; margin-left: 0.00px; margin-top: 0.00px; transform: rotate(0.00rad) translateZ(0px); -webkit-transform: rotate(0.00rad) translateZ(0px);"
-                title=""></span></p>
+                title=""></span>
+            </li>
+        </ol>
+
     <p class="c2"><span class="c1">When the model answer comes back, a new window will appear. You will have the
             possibility to either accept or reject the proposed text. If you accept it, the text will be copied to the
             editor. </span></p>
@@ -821,11 +827,11 @@ def get_explanatory_text(use_llm: bool) -> str:
 
 def main():
     users = create_users(n=N_USERS, n_tasks=N_TASKS)
-    save_as_csv(users, "users/users.csv")
+    # save_as_csv(users, "users/users.csv")
 
     user_mapping = get_user_question_mapping(users)
-    with open("users/user_stats.json", "w") as f:
-        json.dump(user_mapping, f)
+    # with open("users/user_stats.json", "w") as f:
+    #     json.dump(user_mapping, f)
     index_html = get_start_html()
     index_html += get_argumentative_text(use_llm=True) + get_creative_text(use_llm=True) + get_explanatory_text(use_llm=True) + get_warmup_html()
     index_html += get_argumentative_text(use_llm=False) + get_creative_text(use_llm=False) + get_explanatory_text(use_llm=False)
