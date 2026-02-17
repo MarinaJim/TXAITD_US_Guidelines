@@ -532,7 +532,7 @@ def get_start_html():
     </ul>
     <p class="c2"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span
             style="overflow: hidden; display: inline-block; margin: 0.00px 0.00px; border: 0.00px solid #000000; transform: rotate(0.00rad) translateZ(0px); -webkit-transform: rotate(0.00rad) translateZ(0px); width: 1000px; height: auto;"><img
-                alt="" src="images/image1.png"
+                alt="" src="images/login.png"
                 style="width: 800px; height: auto; margin-left: 0.00px; margin-top: 0.00px; transform: rotate(0.00rad) translateZ(0px); -webkit-transform: rotate(0.00rad) translateZ(0px);"
                 title=""></span></p>
     <ul class="c17">
@@ -542,7 +542,7 @@ def get_start_html():
     </ul>
     <p class="c2"><span
             style="overflow: hidden; display: inline-block; margin: 0.00px 0.00px; border: 0.00px solid #000000; transform: rotate(0.00rad) translateZ(0px); -webkit-transform: rotate(0.00rad) translateZ(0px); width: 1200px; height: auto;"><img
-                alt="" src="images/image6.png"
+                alt="" src="images/menu.png"
                 style="width: 1000px; height: auto; margin-left: 0.00px; margin-top: 0.00px; transform: rotate(0.00rad) translateZ(0px); -webkit-transform: rotate(0.00rad) translateZ(0px);"
                 title=""></span></p>
     <p class="c2 c13"><span class="c1"></span></p>
@@ -595,7 +595,7 @@ def get_warmup_html():
             merged with the model&rsquo;s changes.</span></p>
     <p class="c2 c22"><span
             style="overflow: hidden; display: inline-block; margin: 0.00px 0.00px; border: 0.00px solid #000000; transform: rotate(0.00rad) translateZ(0px); -webkit-transform: rotate(0.00rad) translateZ(0px); width: 1200px; height: auto;"><img
-                alt="" src="images/image4.png"
+                alt="" src="images/answer.png"
                 style="width: 1000px; height: auto; margin-left: 0.00px; margin-top: 0.00px; transform: rotate(0.00rad) translateZ(0px); -webkit-transform: rotate(0.00rad) translateZ(0px);"
                 title=""></span></p>
     <p class="c2"><span class="c1">You may experiment with the system for max. 5 minutes. When the time is over, you
